@@ -1,37 +1,33 @@
-import customtkinter as ctk 
-import tkinter as tk
+import tkinter as tk 
+import customtkinter as ctk
 from PIL import ImageTk, Image
 
-ctk.set_default_color_theme("blue")
-ctk.set_appearance_mode("light")
-
-
-class Login(ctk.CTkFrame):
-    def __init__(self,parent):
-        super().__init__(parent)
-        
-        
-
-class Main():
-    def __init__(self,master):
-        mainFrame = ctk.CTkFrame(master,fg_color='#F1C40F')
-        mainFrame.pack(padx = 10,pady=10,fill = 'both',expand=True)
-
-
-        self.my_img = ctk.CTkImage(light_image=Image.open('C:/Users/33333333333333333333/gitdemo/BakeBook/cake_cj7_icon.ico'),size=(200,400))
-        label = ctk.CTkLabel(mainFrame,text='',image=self.my_img)
-        label.pack()
-
-        self.Label = ctk.CTkLabel(mainFrame,text ='Bake-Book',font=('Cooper Black',24))
-        self.Label.pack(padx =10,pady = 10)
-
-        ctk.CTkButton(mainFrame,fg_color = '#E67E22',text='Login').pack(padx = 10, pady = 10)
-        ctk.CTkButton(mainFrame,fg_color='#E67E22', text='Register').pack(padx =10, pady = 10)
-
-
-
 root = ctk.CTk()
-root.title('Bake-Book')
 root.geometry('600x600')
-win = Main(root)
+root.title("Bake-Book")
+
+Main = ctk.CTkFrame(root,fg_color='white')
+
+login_page = ctk.CTkFrame(Main,fg_color="#D2B4DE")
+logo = ctk.CTkImage(light_image=Image.open('C:/Users/33333333333333333333/gitdemo/BakeBook/cake_cj7_icon.ico'),size=(200,200))
+ctk.CTkLabel(login_page,text='',image=logo).pack(side='top')
+
+ctk.CTkLabel(login_page,text='Bake-Book',font=('Garamond bold',24)).pack(side='top')
+ctk.CTkLabel(login_page,text='Manage your bakery like a piece of cake :)',font=('Garamand bold',14)).pack(side='top')
+
+ctk.CTkEntry(login_page,placeholder_text='Username').place(relx=0.5,rely=0.5,anchor=ctk.CENTER)
+ctk.CTkEntry(login_page,placeholder_text='Passsword').place(relx=0.5,rely=0.57,anchor=ctk.CENTER)
+ctk.CTkButton(login_page,text='Login',fg_color='#A569BD',hover_color='#D2B4DE').place(relx=0.5,rely=0.7,anchor=ctk.CENTER)
+ctk.CTkButton(login_page,text='Register',fg_color='#A569BD',hover_color='#D2B4DE').place(relx=0.5,rely=0.77,anchor=ctk.CENTER)
+
+login_page.pack(expand=True,fill='both')
+Main.pack(fill='both',expand=True)
+
+bottom = ctk.CTkFrame(root)
+Back = ctk.CTkButton(bottom,text='Back',font=('Garamond Bold',14),fg_color='#A569BD')
+Back.pack(side='left',padx = 10)
+
+Next = ctk.CTkButton(bottom,text='Next',font=('Garamond Bold',14),fg_color='#A569BD')
+Next.pack(side='left',padx = 10)
+bottom.pack(side='bottom',pady=10)
 root.mainloop()
