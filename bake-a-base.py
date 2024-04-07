@@ -5,13 +5,16 @@ conn = sqlite3.connect('C:/Users/33333333333333333333/gitdemo/BakeBook/bakebase.
 c = conn.cursor()
 
 # c.execute('''
-# CREATE TABLE USER(
+# CREATE TABLE Baker(
 #     U_NAME text,
-#     PASSKEY integer
+#     PASSKEY text
 # )
 # ''')
-# c.execute("INSERT INTO USER VALUES ('aish',3434)")/
-c.execute("SELECT * FROM USER")
+
+# c.execute("DROP TABLE Baker")
+# string = '576t8*&&'
+# c.execute(f"INSERT INTO Baker VALUES ('ais&*&&^h','{string}')")
+c.execute("SELECT * FROM Baker")
 print(c.fetchall())
 conn.commit()
 conn.close()
