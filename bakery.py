@@ -12,7 +12,7 @@ def validate(username,passkey):
     conn = sqlite3.connect('C:/Users/33333333333333333333/gitdemo/BakeBook/bakebase.db')
     c = conn.cursor()
 
-    c.execute('SELECT * FROM Baker WHERE PASSKEY = '+str(passkey))
+    c.execute('SELECT * FROM users WHERE password = '+str(passkey))
     userFromdb = c.fetchone()
     if userFromdb != None and username == userFromdb[0]:
         flag = True
@@ -21,55 +21,90 @@ def validate(username,passkey):
 
     return flag
 
-def cake():
-    print('clicked cake')
+def getValue():
+    conn = sqlite3.connect('C:/Users/33333333333333333333/gitdemo/BakeBook/bakebase.db')
+    c = conn.cursor()
+    c.execute('''
+    ''')
+    conn.commit()
+    connn.close()
 
-def pastry():
-    print('clicked pastry')
+def cake(master):
+    cake_fm = ctk.CTkFrame(master)
+    scroll_cake = ctk.CTkScrollableFrame(cake_fm)
+    scroll_cake.pack(fill='both',expand=True)
+    
+    return cake_fm    
 
-def bread():
-    print('clicked bread')
+def pastry(master):
+    pastry_fm = ctk.CTkFrame(master,fg_color='red')
+    return pastry_fm
 
-def inv():
-    print('clicked inventory')
+def bread(master):
+    bread_fm = ctk.CTkFrame(master,fg_color='blue')
+    return bread_fm    
+
+def inv(master):
+    inv_fm = ctk.CTkFrame(master,fg_color='green')
+    return inv_fm
+
+
+def switch(page,master):
+
+    if not isinstance(page, ctk.CTkFrame) or not isinstance(master, ctk.CTkFrame):
+        raise TypeError("Both 'page' and 'master' must be customtkinter CTkFrame widgets.")
+
+    if not page.winfo_exists():
+        page.pack(fill=ctk.BOTH, expand=True) 
+
+    for child in master.children.values():
+        child.pack_forget()
+
+    page.pack(fill=ctk.BOTH, expand=True)
+
+def inside():
+    login_page.destroy()
+    menu_page = ctk.CTkFrame(Main,fg_color="#D2B4DE")
+    options = ctk.CTkFrame(menu_page,fg_color='white')
+    options.pack(pady=5)
+    options.pack_propagate(False)
+    options.configure(width=600,height=35)
+
+    display_frame = ctk.CTkFrame(menu_page,fg_color='#8E44AD')
+    display_frame.pack(fill='both',expand=True)
+
+    # menu options buttons
+    cake_btn = ctk.CTkButton(options,text='Cakes',font=('Garamond Bold',13),fg_color='white',hover_color='white',text_color='#8E44AD',command = lambda: switch(cake(display_frame),display_frame))
+    cake_btn.pack(side='left',pady = 5)
+    cake(display_frame)
+
+
+        
+    space1 = ctk.CTkLabel(options,text ='',bg_color='#8E44AD')
+    space1.pack(side='left',padx=5)
+
+    pastry_btn = ctk.CTkButton(options,text='Pastries',font=('Garamond Bold',13),fg_color='white',hover_color='white',text_color='#8E44AD',command = lambda : switch(pastry(display_frame),display_frame))
+    pastry_btn.pack(side='left',pady=5)
+
+    space2 = ctk.CTkLabel(options,text ='',bg_color='#8E44AD')
+    space2.pack(side='left',padx=5)
+
+    bread_btn = ctk.CTkButton(options,text='Breads & Toast',font=('Garamond Bold',13),fg_color='white',hover_color='white',text_color='#8E44AD',command = lambda: switch(bread(display_frame),display_frame))
+    bread_btn.pack(side='left',pady=5)
+
+    space3 = ctk.CTkLabel(options,text ='',bg_color='#8E44AD')
+    space3.pack(side='left',padx=5)
+
+    invent_btn = ctk.CTkButton(options,text='Inventory',font=('Garamond Bold',13),fg_color='white',hover_color='white',text_color='#8E44AD',command = lambda: switch(inv(display_frame),display_frame))
+    invent_btn.pack(side='left',pady=5)    
+    menu_page.pack(fill='both',expand=True)
+    # root1.mainloop()
 
 def nextStep(user,passk):
     if validate(user,passk):
-        login_page.destroy()
-        menu_page = ctk.CTkFrame(Main,fg_color="#D2B4DE")
-        options = ctk.CTkFrame(menu_page,fg_color='white')
-        options.pack(pady=5)
-        options.pack_propagate(False)
-        options.configure(width=600,height=35)
-
-        # menu options buttons
-        cake_btn = ctk.CTkButton(options,text='Cakes',font=('Garamond Bold',13),fg_color='white',hover_color='white',text_color='#8E44AD',command = lambda: cake())
-        cake_btn.pack(side='left',pady = 5)
-        
-        space1 = ctk.CTkLabel(options,text ='',bg_color='#8E44AD')
-        space1.pack(side='left',padx=5)
-
-        pastry_btn = ctk.CTkButton(options,text='Pastries',font=('Garamond Bold',13),fg_color='white',hover_color='white',text_color='#8E44AD',command = lambda : pastry())
-        pastry_btn.pack(side='left',pady=5)
-
-        space2 = ctk.CTkLabel(options,text ='',bg_color='#8E44AD')
-        space2.pack(side='left',padx=5)
-
-        bread_btn = ctk.CTkButton(options,text='Breads & Toast',font=('Garamond Bold',13),fg_color='white',hover_color='white',text_color='#8E44AD',command = lambda: bread())
-        bread_btn.pack(side='left',pady=5)
-
-        space3 = ctk.CTkLabel(options,text ='',bg_color='#8E44AD')
-        space3.pack(side='left',padx=5)
-
-        invent_btn = ctk.CTkButton(options,text='Inventory',font=('Garamond Bold',13),fg_color='white',hover_color='white',text_color='#8E44AD',command = lambda: inv())
-        invent_btn.pack(side='left',pady=5)
-
-        display_frame = ctk.CTkFrame(menu_page,fg_color='#8E44AD')
-        display_frame.pack(fill='both',expand=True)
-        
-        menu_page.pack(fill='both',expand=True) 
+        inside()
     else:
-        messagebox.showerror(('Error',"Invalid credentials"))
+        messagebox.showerror('Error',"Invalid credentials")
 
 
 def AddUser(parent,username,passk,cpass):
@@ -78,7 +113,7 @@ def AddUser(parent,username,passk,cpass):
         # encode_pass = passk.encode('utf-8')
         conn = sqlite3.connect('C:/Users/33333333333333333333/gitdemo/BakeBook/bakebase.db')
         c = conn.cursor()
-        c.execute("INSERT INTO Baker (U_NAME,PASSKEY) VALUES (?,?)",[username,passk])
+        c.execute("INSERT INTO users (username,password) VALUES (?,?)",[username,passk])
         conn.commit()
         conn.close()
         flag = not flag
@@ -119,7 +154,7 @@ def reg():
 
     
     R.mainloop()
-
+okflag = False
 root = ctk.CTk()
 root.geometry('600x600')
 root.title("Bake-Book")
@@ -145,11 +180,4 @@ ctk.CTkButton(login_page,text='Register',fg_color='#A569BD',hover_color='#8E44AD
 login_page.pack(expand=True,fill='both')
 Main.pack(fill='both',expand=True)
 
-# bottom = ctk.CTkFrame(root)
-# Back = ctk.CTkButton(bottom,text='Back',font=('Garamond Bold',14),fg_color='#A569BD')
-# Back.pack(side='left',padx = 10)
-
-# Next = ctk.CTkButton(bottom,text='Next',font=('Garamond Bold',14),fg_color='#A569BD')
-# Next.pack(side='left',padx = 10)
-# bottom.pack(side='bottom',pady=10)
 root.mainloop()
