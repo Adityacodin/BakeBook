@@ -4,7 +4,7 @@ from PIL import Image, ImageTk
 import sqlite3  # Assuming you're using sqlite3
 
 # Database connection details (replace with your actual connection details)
-db_name = "C:/Users/33333333333333333333/gitdemo/BakeBook/trial.db"
+db_name = "C:/Users/3333333333333;3333333/gitdemo/BakeBook/trial.db"
 table_name = "IMAGES"
 image_path_column = "img_path"
 
