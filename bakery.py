@@ -34,14 +34,26 @@ def get_info(user):
 def get_cakes(list):
     img_list = []
     for images in list:
-        img_list.append(images[1])
+        img_list.append(images[2])
     return img_list
 
+def get_names(list,n):
+    name_list = []
+    for names in list:
+        name_list.append(names[n])
+    return name_list
+
 def get_pastries(list):
-    pass
+    img_list = []
+    for images in list:
+        img_list.append(images[4])
+    return img_list
 
 def get_bread(list):
-    pass
+    img_list = []
+    for images in list:
+        img_list.append(images[6])
+    return img_list
 
 def get_inv(user):
     pass
@@ -52,7 +64,10 @@ def cake(user,master):
     scroll_cake.pack(fill='both',expand=True)
     info = get_info(user)
     img_list = get_cakes(info)
-    print(img_list[0])
+    name_ls = get_names(info, 3)
+    name_ls.reverse()
+    print(name_ls)
+    # print(img_list[1])
     size = len(img_list)
     # print(size)
     frame_no = math.ceil(size/3)
@@ -62,32 +77,96 @@ def cake(user,master):
     for i in range (0,frame_no):
         frame = ctk.CTkFrame(scroll_cake)
         frame.pack(fill='both',expand=True)
-        up = ctk.CTkFrame(frame,fg_color ='green')
+        up = ctk.CTkFrame(frame,fg_color ='#8E44AD')
         up.pack(side='top',fill = 'both',expand=True)
-        down = ctk.CTkFrame(frame)
+        down = ctk.CTkFrame(frame,fg_color='#AF7AC5')
         down.pack(side='bottom',fill = 'both',expand=True)
 
         for j in range(3):
             img = ctk.CTkImage(light_image=Image.open(img_list[count-1-k]),size=(100,100))
             ctk.CTkLabel(up,text='',image=img).pack(side='left',pady = 10,padx =40)
+            ctk.CTkLabel(down,text=name_ls[k]).pack(side='left',pady = 10,padx = 30)
+            ctk.CTkButton(down,text='Add',width=30,fg_color='#8E44AD').pack(side='left')
             k+=1
-            if k>count:
+            if k>=count:
                 break
-        d = ctk.CTkFrame(down,fg_color ='red')
-        d.pack()
-        ctk.CTkLabel(d,text='cake names').pack(side='bottom')
+
+        
     return cake_fm    
 
 def pastry(user,master):
     pastry_fm = ctk.CTkFrame(master,fg_color='red')
+    scroll_pastry = ctk.CTkScrollableFrame(pastry_fm,fg_color='white')
+    scroll_pastry.pack(fill='both',expand=True)
+    info = get_info(user)
+    img_list = get_pastries(info)
+    name_ls = get_names(info, 5)
+    name_ls.reverse()
+    print(name_ls)
+    print(img_list[0])
+    size = len(img_list)
+    # print(size)
+    frame_no = math.ceil(size/3)
+    # print(each_frame)
+    count = len(img_list)
+    k = 0
+    for i in range (0,frame_no):
+        frame = ctk.CTkFrame(scroll_pastry)
+        frame.pack(fill='both',expand=True)
+        up = ctk.CTkFrame(frame,fg_color ='#8E44AD')
+        up.pack(side='top',fill = 'both',expand=True)
+        down = ctk.CTkFrame(frame,fg_color='#AF7AC5')
+        down.pack(side='bottom',fill = 'both',expand=True)
+
+        for j in range(3):
+            img = ctk.CTkImage(light_image=Image.open(img_list[count-1-k]),size=(100,100))
+            ctk.CTkLabel(up,text='',image=img).pack(side='left',pady = 10,padx =40)
+            ctk.CTkLabel(down,text=name_ls[k]).pack(side='left',pady = 10,padx = 30)
+            ctk.CTkButton(down,text='Add',width=30,fg_color='#8E44AD').pack(side='left')
+            k+=1
+            if k>=count:
+                break
+
     return pastry_fm
 
 def bread(user,master):
     bread_fm = ctk.CTkFrame(master,fg_color='blue')
+    scroll_bread = ctk.CTkScrollableFrame(bread_fm,fg_color='white')
+    scroll_bread.pack(fill='both',expand=True)
+    info = get_info(user)
+    img_list = get_bread(info)
+    name_ls = get_names(info, 7)
+    name_ls.reverse()
+    print(name_ls)
+    print(img_list[0])
+    size = len(img_list)
+    # print(size)
+    frame_no = math.ceil(size/3)
+    # print(each_frame)
+    count = len(img_list)
+    k = 0
+    for i in range (0,frame_no):
+        frame = ctk.CTkFrame(scroll_bread)
+        frame.pack(fill='both',expand=True)
+        up = ctk.CTkFrame(frame,fg_color ='#8E44AD')
+        up.pack(side='top',fill = 'both',expand=True)
+        down = ctk.CTkFrame(frame,fg_color='#AF7AC5')
+        down.pack(side='bottom',fill = 'both',expand=True)
+
+        for j in range(3):
+            img = ctk.CTkImage(light_image=Image.open(img_list[count-1-k]),size=(100,100))
+            ctk.CTkLabel(up,text='',image=img).pack(side='left',pady = 10,padx =40)
+            ctk.CTkLabel(down,text=name_ls[k]).pack(side='left',pady = 10,padx = 30)
+            ctk.CTkButton(down,text='Add',width=30,fg_color='#8E44AD').pack(side='left')
+            k+=1
+            if k>=count:
+                break
     return bread_fm    
 
 def inv(user,master):
-    inv_fm = ctk.CTkFrame(master,fg_color='green')
+    inv_fm = ctk.CTkFrame(master,fg_color='#D2B4DE')
+    update_button = ctk.CTkButton(inv_fm,text = 'Update Inventory',fg_color ='#A569BD',hover_color='#8E44AD')
+    update_button.pack(side = 'top', padx = 10,pady=10)
     return inv_fm
 
 
@@ -148,8 +227,7 @@ def nextStep(user,passk):
     else:
         messagebox.showerror('Error',"Invalid credentials")
 
-
-def AddUser(parent,username,passk,cpass):
+def AddUser(R,parent,username,passk,cpass):
     flag = False
     if passk == cpass and (passk!=''and cpass!=''and username!=''):
         # encode_pass = passk.encode('utf-8')
@@ -162,18 +240,14 @@ def AddUser(parent,username,passk,cpass):
 
     if flag:
         messagebox.showinfo('Success','User has been registered')
+        R.destroy()
+        # get_started()
     else :
         messagebox.showerror('Error','Registration Failed ')
 
-
-    
-
-
-
-
 def reg():
     R = ctk.CTk()
-    R.geometry('400x400')
+    R.geometry('600x600')
     R.title('Bake-Book Registration')
     frame = ctk.CTkFrame(R,fg_color='#D2B4DE')
     frame.pack(fill='both',expand=True)
@@ -191,7 +265,7 @@ def reg():
     cp.place(relx = 0.65,rely=0.7,anchor = ctk.CENTER)
         
         
-    ctk.CTkButton(frame,text = 'Complete',fg_color='#A569BD',hover_color='#8E44AD',command = lambda: AddUser(frame,u.get(),p.get(),cp.get())).place(relx = 0.65,rely = 0.8,anchor=ctk.CENTER)
+    ctk.CTkButton(frame,text = 'Complete',fg_color='#A569BD',hover_color='#8E44AD',command = lambda: AddUser(R,frame,u.get(),p.get(),cp.get())).place(relx = 0.65,rely = 0.8,anchor=ctk.CENTER)
         
 
     
