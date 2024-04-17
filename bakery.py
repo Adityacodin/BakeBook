@@ -4,6 +4,7 @@ from PIL import ImageTk, Image
 import sqlite3
 import bcrypt
 from tkinter import messagebox
+from tkinter import ttk
 import math
 
 
@@ -55,8 +56,11 @@ def get_bread(list):
         img_list.append(images[6])
     return img_list
 
-def get_inv(user):
-    pass
+def get_inv(list,n):
+    new_ls = []
+    for names in list:
+        new_ls.append(names[n])
+    return new_ls
 
 def cake(user,master):
     cake_fm = ctk.CTkFrame(master)
@@ -95,7 +99,7 @@ def cake(user,master):
     return cake_fm    
 
 def pastry(user,master):
-    pastry_fm = ctk.CTkFrame(master,fg_color='red')
+    pastry_fm = ctk.CTkFrame(master,fg_color='#D2B4DE')
     scroll_pastry = ctk.CTkScrollableFrame(pastry_fm,fg_color='white')
     scroll_pastry.pack(fill='both',expand=True)
     info = get_info(user)
@@ -161,13 +165,142 @@ def bread(user,master):
             k+=1
             if k>=count:
                 break
-    return bread_fm    
+    return bread_fm
+
+def disp_contents(window,product):
+    product_name = None
+    conn = sqlite3.connect('C:/Users/33333333333333333333/gitdemo/BakeBook/bakebase.db')
+    c = conn.cursor()
+    info = None
+    if product == 'c':
+        product_name = 'Cakes'
+        c.execute('''SELECT cake_name,c_qaunt FROM user_baked_goods''')
+        info = c.fetchall()
+        conn.commit()
+    elif product == 'p':
+        product_name = 'Pastries'
+        c.execute('''SELECT patry_name,p_quant FROM user_baked_goods''')
+        info = c.fetchall()
+        conn.commit()
+    elif product == 'b':
+        product_name = 'Breads and Toast'
+        c.execute('''SELECT bread_name,b_quant_integer FROM user_baked_goods''')
+        info = c.fetchall()
+        conn.commit()
+    conn.close()
+    table = ttk.Treeview(window,columns=('prod_name','Quantity'),show='headings')
+    table.heading('prod_name',text = product_name)
+    table.heading('Quantity',text = 'Quantity')
+    for i in range(len(info)):
+        data = info[i]
+        table.insert(parent='',index = 0, values = data)
+    table.pack()
+
+def get_quant(list,n):
+    quant = []
+    for items in list:
+        quant.append(items[n])
+    return quant
+
+def add_items(user,name,quant,dec):
+    units = int(quant)
+    conn = sqlite3.connect('C:/Users/33333333333333333333/gitdemo/BakeBook/bakebase.db')
+    c = conn.cursor()
+    if dec == 'c':
+        c.execute('''
+        UPDATE user_baked_goods
+        SET c_qaunt = ?
+        WHERE username = ? AND cake_name = ?;
+        ''',(units,user,name))
+    elif dec == 'p':
+        c.execute('''
+        UPDATE user_baked_goods
+        SET p_quant = ?
+        WHERE username = ? AND patry_name = ?;
+        ''',(units,user,name))
+    elif dec == 'b':
+        c.execute('''
+        UPDATE user_baked_goods
+        SET b_quant_integer = ?
+        WHERE username = ? AND bread_name = ?;
+        ''',(units,user,name))
+    conn.commit()
+    conn.close()
+
+def update_inv(user):
+    new_win = ctk.CTk()
+    main = ctk.CTkFrame(new_win,fg_color='#D2B4DE')
+    new_win.geometry('500x400')
+    new_win.title('Update Inventory')
+    info = get_info(user)
+    cake = get_names(info, 3)
+    cake_quant = get_quant(info, 8)
+    pastry = get_names(info, 5)
+    pastry_quant = get_quant(info, 9)
+    bread = get_names(info, 7)
+    bread_quant = get_quant(info, 10)
+    Tab = ctk.CTkTabview(main,fg_color='#8E44AD',
+    segmented_button_fg_color='#8E44AD',
+    segmented_button_selected_color='#D2B4DE',
+    segmented_button_unselected_color='#8E44AD',
+    segmented_button_selected_hover_color='#D2B4DE',
+    segmented_button_unselected_hover_color='#8E44AD')
+    Tab.pack(padx = 10, pady = 10,fill = 'both',expand = True)
+    cake_tab = Tab.add('Cake')
+    pastry_tab = Tab.add('Pastry')
+    bread_tab = Tab.add('Breads')
+
+    cake_box = ctk.CTkComboBox(cake_tab,values = cake)
+    cake_box.place(relx = 0.3, rely = 0.3, anchor = ctk.CENTER)
+    cake_units = ctk.CTkEntry(cake_tab, placeholder_text = 'Units',width = 50)
+    cake_units.place(relx = 0.7,rely = 0.3, anchor = ctk.CENTER)
+    add_c = ctk.CTkButton(cake_tab,text='Add',hover_color = '#D2B4DE',fg_color='#A569BD',command = lambda:add_items(user,cake_box.get(),cake_units.get(),'c'))
+    add_c.place(relx = 0.5,rely = 0.5, anchor = ctk.CENTER) 
+ 
+    pastry_box = ctk.CTkComboBox(pastry_tab,values = pastry)
+    pastry_box.place(relx = 0.3, rely = 0.3, anchor = ctk.CENTER)
+    pastry_units = ctk.CTkEntry(pastry_tab, placeholder_text = 'Units',width = 50)
+    pastry_units.place(relx = 0.7,rely = 0.3, anchor = ctk.CENTER)
+    add_p = ctk.CTkButton(pastry_tab,text='Add',hover_color = '#D2B4DE',fg_color='#A569BD',command = lambda:add_items(user,pastry_box.get(),pastry_units.get(),'p'))
+    add_p.place(relx = 0.5,rely = 0.5, anchor = ctk.CENTER) 
+
+    bread_box = ctk.CTkComboBox(bread_tab,values = bread)
+    bread_box.place(relx = 0.3, rely = 0.3, anchor = ctk.CENTER)
+    bread_units = ctk.CTkEntry(bread_tab, placeholder_text = 'Units',width = 50)
+    bread_units.place(relx = 0.7,rely = 0.3, anchor = ctk.CENTER)
+    add_b = ctk.CTkButton(bread_tab,text='Add',hover_color = '#D2B4DE',fg_color='#A569BD',command = lambda:add_items(user,bread_box.get(),bread_units.get(),'b'))
+    add_b.place(relx = 0.5,rely = 0.5, anchor = ctk.CENTER) 
+
+    ctk.CTkButton(main,text='Done',command = lambda: done(new_win),fg_color = '#A569BD',hover_color='#8E44AD').pack(side='bottom',pady = 10)
+    main.pack(fill='both',expand=True)
+    new_win.mainloop()
+
+def scroll_cont(master):
+    scroll = ctk.CTkScrollableFrame(master,fg_color='#8E44AD')
+    scroll.pack(fill='both',expand = True)
+    ctk.CTkLabel(scroll,text='Cakes',font=('Garamond Bold',25),text_color='#D2B4DE').pack(side='top',padx = 10, pady = 10)
+    disp_contents(scroll,'c')
+    ctk.CTkLabel(scroll,text='Pastries',font=('Garamond Bold',25),text_color='#D2B4DE').pack(side='top',padx = 10, pady = 10)
+    disp_contents(scroll,'p')
+    ctk.CTkLabel(scroll,text='Breads and Toast',font=('Garamond Bold',25),text_color='#D2B4DE').pack(side='top',padx = 10, pady = 10)
+    disp_contents(scroll,'b')
 
 def inv(user,master):
     inv_fm = ctk.CTkFrame(master,fg_color='#D2B4DE')
-    update_button = ctk.CTkButton(inv_fm,text = 'Update Inventory',fg_color ='#A569BD',hover_color='#8E44AD')
-    update_button.pack(side = 'top', padx = 10,pady=10)
+    inv_fm.pack(side = 'bottom', fill='both',expand = True)
+    menu_fm = ctk.CTkFrame(inv_fm,fg_color = '#D2B4DE')
+    update_button = ctk.CTkButton(menu_fm,text = 'Update Inventory',fg_color = '#A569BD',hover_color='#8E44AD',command = lambda : update_inv(user))
+    update_button.place(relx = 0.4, rely = 0.5,anchor = ctk.CENTER)
+    add_new = ctk.CTkButton(menu_fm,text='Add New Item',fg_color = '#A569BD',hover_color='#8E44AD')
+    add_new.place(relx = 0.7, rely = 0.5,anchor = ctk.CENTER)
+    menu_fm.pack(side = 'bottom',pady=5)
+    menu_fm.pack_propagate(False)
+    menu_fm.configure(width=600,height=50) 
+    scroll_fm = ctk.CTkFrame(inv_fm)
+    scroll_fm.pack(fill='both',expand =True)
+    scroll_cont(scroll_fm)
     return inv_fm
+    
 
 
 def switch(page,master):
@@ -198,8 +331,6 @@ def inside(user):
     cake_btn = ctk.CTkButton(options,text='Cakes',font=('Garamond Bold',13),fg_color='white',hover_color='white',text_color='#8E44AD',command = lambda: switch(cake(user,display_frame),display_frame))
     cake_btn.pack(side='left',pady = 5)
     # cake(userdisplay_frame)
-
-
         
     space1 = ctk.CTkLabel(options,text ='',bg_color='#8E44AD')
     space1.pack(side='left',padx=5)
@@ -225,7 +356,7 @@ def nextStep(user,passk):
     if validate(user,passk):
         inside(user)
     else:
-        messagebox.showerror('Error',"Invalid credentials")
+        messagebox.showerror('Error',"Invalid c#D2B4DEentials")
 
 def AddUser(R,parent,username,passk,cpass):
     flag = False
@@ -239,7 +370,7 @@ def AddUser(R,parent,username,passk,cpass):
         flag = not flag
 
     if flag:
-        messagebox.showinfo('Success','User has been registered')
+        messagebox.showinfo('Success','User has been registe#D2B4DE')
         R.destroy()
         # get_started()
     else :

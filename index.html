@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Password Management System</title>
+<style>
+    body {
+        font-family: Times roman, sans-serif;
+    }
+    .form-group {
+        margin-bottom: 20px;
+    }
+    .error-message {
+        color: red;
+    }
+</style>
+</head>
+<body>
+
+<h2> Kgce Password Management web</h2>
+
+<div id="registration-form">
+    <h3>Registration</h3>
+    <div class="form-group">
+        <label for="username">Username:</label>
+        <input type="text" id="username" required>
+    </div>
+    <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" oninput="checkPassword(this.value)" minlength="8" required>
+        <span id="password-strength"></span>
+    </div>
+    <div class="form-group">
+        <button onclick="registerUser()">Register</button>
+    </div>
+</div>
+
+<div id="login-form">
+    <h3>Login</h3>
+    <form id="login-form">
+        <div class="form-group">
+            <label for="login-username">Username:</label>
+            <input type="text" id="login-username" name="username" required>
+        </div>
+        <div class="form-group">
+            <label for="login-password">Password:</label>
+            <input type="password" id="login-password" name="password" required>
+            <span class="error-message" id="login-error-message"></span>
+        </div>
+        <div class="form-group">
+            <button onclick="loginUser()">Login</button>
+        </div>
+    </form>
+</div>
+
+<div id="output"></div>
+
+<output id="login-output"></output>
+
+<script>
+var failedLoginAttempts = {}; // Object to store failed login attempts for each user
+var maxFailedAttempts = 2; // Maximum number of failed login attempts before account lockout
+
+function loginUser() {
+    var username = document.getElementById('login-username').value;
+    var password = document.getElementById('login-password').value;
+    var errorMessage = document.getElementById('login-error-message');
+
+    // Check if the user has exceeded the maximum number of failed login attempts
+    if (failedLoginAttempts[username] >= maxFailedAttempts) {
+        errorMessage.innerHTML = 'Your account has been locked due to too many failed login attempts. Please contact kgce support to unlock your account.';
+        return;
+    }
+
+    // Perform actual authentication
+    // Here, you should validate the username and password against your database
+    // This is a basic example and should be replaced with secure authentication mechanisms
+    if (isValidUser(username, password)) {
+        // Clear error message
+        errorMessage.innerHTML = '';
+
+        // Delay for 2 seconds before redirecting
+        setTimeout(function() {
+            window.location.href = "https://kgce.edu.in/"; // Redirect to the desired page after successful login
+        }, 2000); // 2000 milliseconds = 2 seconds
+    } else {
+        // Increment failed login attempts for the user
+        failedLoginAttempts[username] = (failedLoginAttempts[username] || 0) + 1;
+        errorMessage.innerHTML = 'Incorrect username or password. Please try again.';
+
+        // Check if the user has reached the maximum number of failed login attempts
+        if (failedLoginAttempts[username] >= maxFailedAttempts) {
+            errorMessage.innerHTML += '<br>Your account has been locked due to too many failed login attempts. Please contact kgce support to unlock your account.';
+        }
+    }
+}
+
+// Function to validate user credentials (replace this with your actual authentication logic)
+function isValidUser(username, password) {
+    // Replace this with your actual validation logic (e.g., querying a database)
+    // For demonstration purposes, I'm using a hardcoded username and password
+    return username === "exampleUser" && password === "examplePassword";
+}
+
+function checkPassword(password) {
+    var strengthIndicator = document.getElementById('password-strength');
+
+    if (password.length == 0) {
+        strengthIndicator.innerHTML = '';
+        return;
+    }
+
+    // Implement a more robust password strength algorithm
+    // Your implementation here
+
+    // The following code is a basic example and may not be sufficient for all cases
+    var strength = 0;
+
+    if (password.length >= 8) {
+        strength += 1;
+    }
+
+    if (password.match(/[a-z]/) && password.match(/[A-Z]/)) {
+        strength += 1;
+    }
+
+    if (password.match(/[0-9]/)) {
+        strength += 1;
+    }
+
+    if (password.match(/[$&+,:;=?@#|'<>.^*()%!-]/)) {
+        strength += 1;
+    }
+
+    if (strength == 4) {
+        strengthIndicator.innerHTML = '<span style="color:green;">Strong</span>';
+    } else if (strength >= 2) {
+        strengthIndicator.innerHTML = '<span style="color:orange;">Medium</span>';
+    } else {
+        strengthIndicator.innerHTML = '<span style="color:red;">Weak</span>';
+    }
+}
+
+function registerUser() {
+    var username = document.getElementById('username').value;
+    var password = document.getElementById('password').value;
+    // Assume database integration here for user registration
+    document.getElementById('output').innerHTML = '<p>User ' + username + ' registered successfully.</p>';
+}
+</script>
+
+</body>
+</html>
