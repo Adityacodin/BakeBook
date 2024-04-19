@@ -202,30 +202,52 @@ def get_quant(list,n):
         quant.append(items[n])
     return quant
 
-def add_items(user,name,quant,dec):
-    units = int(quant)
-    conn = sqlite3.connect('C:/Users/33333333333333333333/gitdemo/BakeBook/bakebase.db')
-    c = conn.cursor()
-    if dec == 'c':
-        c.execute('''
-        UPDATE user_baked_goods
-        SET c_qaunt = ?
-        WHERE username = ? AND cake_name = ?;
-        ''',(units,user,name))
-    elif dec == 'p':
-        c.execute('''
-        UPDATE user_baked_goods
-        SET p_quant = ?
-        WHERE username = ? AND patry_name = ?;
-        ''',(units,user,name))
-    elif dec == 'b':
-        c.execute('''
-        UPDATE user_baked_goods
-        SET b_quant_integer = ?
-        WHERE username = ? AND bread_name = ?;
-        ''',(units,user,name))
-    conn.commit()
-    conn.close()
+def mixedletters(master,quant):
+    for i in range(len(quant)):
+            if quant[i].isalpha():
+                return True
+    return False
+
+def add_items(window,user,name,quant,dec):
+    flag = None
+    if '.' in quant:
+        messagebox.showerror('Error','Entered a fractional value')
+        window.destroy()
+    elif quant.isalpha() or mixedletters(window,quant):
+        messagebox.showerror('Error','Only numerical values allowed')
+        window.destroy()
+    else:
+        units = int(quant)
+        conn = sqlite3.connect('C:/Users/33333333333333333333/gitdemo/BakeBook/bakebase.db')
+        c = conn.cursor()
+        if dec == 'c':
+            c.execute('SELECT c_qaunt from user_baked_goods WHERE username = ? AND cake_name = ?',(user,name))
+            q = c.fetchone()[0]
+            print(q)
+            c.execute('''
+            UPDATE user_baked_goods
+             SET c_qaunt = ?
+            WHERE username = ? AND cake_name = ?;
+            ''',(q+units,user,name))
+        elif dec == 'p':
+            c.execute('SELECT p_quant from user_baked_goods WHERE username = ? AND patry_name = ?',(user,name))
+            q = c.fetchone()[0]
+            c.execute('''
+            UPDATE user_baked_goods
+            SET p_quant = ?
+            WHERE username = ? AND patry_name = ?;
+            ''',(q+units,user,name))
+        elif dec == 'b':
+            c.execute('SELECT b_quant_integer from user_baked_goods WHERE username = ? AND bread_name = ?',(user,name))
+            q = c.fetchone()[0]
+            c.execute('''
+            UPDATE user_baked_goods
+            SET b_quant_integer = ?
+            WHERE username = ? AND bread_name = ?;
+            ''',(q+units,user,name))
+        conn.commit()
+        conn.close()
+        messagebox.showinfo('Success','Item quantity updated in the inventory')
 
 def update_inv(user):
     new_win = ctk.CTk()
@@ -254,30 +276,60 @@ def update_inv(user):
     cake_box.place(relx = 0.3, rely = 0.3, anchor = ctk.CENTER)
     cake_units = ctk.CTkEntry(cake_tab, placeholder_text = 'Units',width = 50)
     cake_units.place(relx = 0.7,rely = 0.3, anchor = ctk.CENTER)
-    add_c = ctk.CTkButton(cake_tab,text='Add',hover_color = '#D2B4DE',fg_color='#A569BD',command = lambda:add_items(user,cake_box.get(),cake_units.get(),'c'))
+    add_c = ctk.CTkButton(cake_tab,text='Add',hover_color = '#D2B4DE',fg_color='#A569BD',command = lambda:add_items(new_win,user,cake_box.get(),cake_units.get(),'c'))
     add_c.place(relx = 0.5,rely = 0.5, anchor = ctk.CENTER) 
  
     pastry_box = ctk.CTkComboBox(pastry_tab,values = pastry)
     pastry_box.place(relx = 0.3, rely = 0.3, anchor = ctk.CENTER)
     pastry_units = ctk.CTkEntry(pastry_tab, placeholder_text = 'Units',width = 50)
     pastry_units.place(relx = 0.7,rely = 0.3, anchor = ctk.CENTER)
-    add_p = ctk.CTkButton(pastry_tab,text='Add',hover_color = '#D2B4DE',fg_color='#A569BD',command = lambda:add_items(user,pastry_box.get(),pastry_units.get(),'p'))
+    add_p = ctk.CTkButton(pastry_tab,text='Add',hover_color = '#D2B4DE',fg_color='#A569BD',command = lambda:add_items(new_win,user,pastry_box.get(),pastry_units.get(),'p'))
     add_p.place(relx = 0.5,rely = 0.5, anchor = ctk.CENTER) 
 
     bread_box = ctk.CTkComboBox(bread_tab,values = bread)
     bread_box.place(relx = 0.3, rely = 0.3, anchor = ctk.CENTER)
     bread_units = ctk.CTkEntry(bread_tab, placeholder_text = 'Units',width = 50)
     bread_units.place(relx = 0.7,rely = 0.3, anchor = ctk.CENTER)
-    add_b = ctk.CTkButton(bread_tab,text='Add',hover_color = '#D2B4DE',fg_color='#A569BD',command = lambda:add_items(user,bread_box.get(),bread_units.get(),'b'))
+    add_b = ctk.CTkButton(bread_tab,text='Add',hover_color = '#D2B4DE',fg_color='#A569BD',command = lambda:add_items(new_win,user,bread_box.get(),bread_units.get(),'b'))
     add_b.place(relx = 0.5,rely = 0.5, anchor = ctk.CENTER) 
 
     ctk.CTkButton(main,text='Done',command = lambda: done(new_win),fg_color = '#A569BD',hover_color='#8E44AD').pack(side='bottom',pady = 10)
     main.pack(fill='both',expand=True)
     new_win.mainloop()
 
-def scroll_cont(master):
+def refresh(user,master,s1,s2,big_m):
+    s1.destroy()
+    s2.destroy()
+    inv(user,big_m)
+
+def add_new_item(user):
+    new_win = ctk.CTk()
+    new_win.geometry('500x400')
+    new_win.resizable(width = False,height=False)
+    main_fm = ctk.CTkFrame(new_win,fg_color='#D2B4DE')
+    main_fm.pack(fill='both',expand = True)
+    item_name_lb = ctk.CTkLabel(main_fm,text = 'Add Item name : ')
+    item_name_lb.place(relx = 0.3,rely = 0.2, anchor=ctk.CENTER)
+    item_name = ctk.CTkEntry(main_fm)
+    item_name.place(relx = 0.6,rely = 0.2,anchor =ctk.CENTER)
+    item_category_lb = ctk.CTkLabel(main_fm,text = 'Item Category : ')
+    item_category_lb.place(relx = 0.3, rely = 0.4,anchor = ctk.CENTER)
+    radio_var = ctk.StringVar(value = 'other')
+    c = ctk.CTkRadioButton(main_fm,text = 'Cake',value = 'c',variable = radio_var)
+    c.place(relx = 0.7, rely = 0.5, anchor = ctk.CENTER)
+    p = ctk.CTkRadioButton(main_fm,text = 'Pastry',value = 'p',variable = radio_var)
+    p.place(relx = 0.7, rely = 0.6, anchor = ctk.CENTER)
+    b = ctk.CTkRadioButton(main_fm,text = 'Breads',value = 'b',variable = radio_var)
+    b.place(relx = 0.7, rely = 0.7, anchor = ctk.CENTER)
+    
+    new_win.mainloop()
+
+
+def scroll_cont(user,master,s1,s2,big_m):
     scroll = ctk.CTkScrollableFrame(master,fg_color='#8E44AD')
     scroll.pack(fill='both',expand = True)
+    refresh_btn = ctk.CTkButton(scroll,text='Refresh ',hover_color = '#D2B4DE',fg_color='#A569BD',width = 40,command = lambda: refresh(user,master,s1,s2,big_m))
+    refresh_btn.pack(side = 'top',padx = 10, pady = 10)
     ctk.CTkLabel(scroll,text='Cakes',font=('Garamond Bold',25),text_color='#D2B4DE').pack(side='top',padx = 10, pady = 10)
     disp_contents(scroll,'c')
     ctk.CTkLabel(scroll,text='Pastries',font=('Garamond Bold',25),text_color='#D2B4DE').pack(side='top',padx = 10, pady = 10)
@@ -290,15 +342,16 @@ def inv(user,master):
     inv_fm.pack(side = 'bottom', fill='both',expand = True)
     menu_fm = ctk.CTkFrame(inv_fm,fg_color = '#D2B4DE')
     update_button = ctk.CTkButton(menu_fm,text = 'Update Inventory',fg_color = '#A569BD',hover_color='#8E44AD',command = lambda : update_inv(user))
-    update_button.place(relx = 0.4, rely = 0.5,anchor = ctk.CENTER)
-    add_new = ctk.CTkButton(menu_fm,text='Add New Item',fg_color = '#A569BD',hover_color='#8E44AD')
+    update_button.place(relx = 0.3, rely = 0.5,anchor = ctk.CENTER)
+    add_new = ctk.CTkButton(menu_fm,text='Add New Item',fg_color = '#A569BD',hover_color='#8E44AD',command = lambda: add_new_item(user))
     add_new.place(relx = 0.7, rely = 0.5,anchor = ctk.CENTER)
+
     menu_fm.pack(side = 'bottom',pady=5)
     menu_fm.pack_propagate(False)
     menu_fm.configure(width=600,height=50) 
     scroll_fm = ctk.CTkFrame(inv_fm)
     scroll_fm.pack(fill='both',expand =True)
-    scroll_cont(scroll_fm)
+    scroll_cont(user,scroll_fm,inv_fm,menu_fm,master)
     return inv_fm
     
 

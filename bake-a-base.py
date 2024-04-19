@@ -134,50 +134,56 @@ c = conn.cursor()
 # ''')
 
 
-cakes = ['C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake1.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake2.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake3.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake4.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake5.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake6.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake7.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake8.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake9.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake10.jpg',
-]
-pastries = ['C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry1.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry2.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry3.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry4.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry5.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry6.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry7.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry8.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry9.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry10.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry11.jpg',
-]
-breads = ['C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b1.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b2.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b3.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b4.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b5.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b6.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b7.jpg',]
-c_name = ['Black Forest','Red Velvet','Chocolate Cake','Truffle Drizzle','Vanilla Drip','Birthday Treat','Chococlate Cheesecake','Purple Haze','Wedding Cake','Chip Saga']
-p_name= ['Pinapple Peace','Red Star','White Sea','Hazel Bite','Forest White','Trufflesome','Devils delight','Velvet Bliss','Almond & Hazel','Pink rizz','Sweet Three']
-b_name = ['Brown cookies','Chocolate cookies','Loaf of Bread','Long Bread','Milk Rusk','Butter Rusk','Whole Grain bread']
+c.execute('''
+SELECT * FROM users;
+''')
+print(c.fetchall())
+c.execute('SELECT cake_name FROM user_baked_goods;')
+print(c.fetchall())
+# cakes = ['C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake1.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake2.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake3.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake4.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake5.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake6.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake7.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake8.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake9.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake10.jpg',
+# ]
+# pastries = ['C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry1.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry2.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry3.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry4.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry5.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry6.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry7.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry8.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry9.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry10.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry11.jpg',
+# ]
+# breads = ['C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b1.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b2.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b3.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b4.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b5.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b6.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b7.jpg',]
+# c_name = ['Black Forest','Red Velvet','Chocolate Cake','Truffle Drizzle','Vanilla Drip','Birthday Treat','Chococlate Cheesecake','Purple Haze','Wedding Cake','Chip Saga']
+# p_name= ['Pinapple Peace','Red Star','White Sea','Hazel Bite','Forest White','Trufflesome','Devils delight','Velvet Bliss','Almond & Hazel','Pink rizz','Sweet Three']
+# b_name = ['Brown cookies','Chocolate cookies','Loaf of Bread','Long Bread','Milk Rusk','Butter Rusk','Whole Grain bread']
 
-# c.execute('ALTER TABLE user_baked_goods MODIFY c_quant INTEGER;')
-for i in range (7):
-#     # c.execute('''
-#     # INSERT INTO user_baked_goods VALUES (?,'aditya',?,?,?,?,?,?,0,0,0)
-#     # ''',(i,cakes[i],c_name[i],pastries[i],p_name[i],breads[i],b_name[i]))
-    c.execute(f'''
-    UPDATE user_baked_goods 
-    SET b_quant_integer = 10
-    WHERE bread_name = '{b_name[i]}';
-    ''')
+# # c.execute('ALTER TABLE user_baked_goods MODIFY c_quant INTEGER;')
+# for i in range (7):
+# #     # c.execute('''
+# #     # INSERT INTO user_baked_goods VALUES (?,'aditya',?,?,?,?,?,?,0,0,0)
+# #     # ''',(i,cakes[i],c_name[i],pastries[i],p_name[i],breads[i],b_name[i]))
+#     c.execute(f'''
+#     UPDATE user_baked_goods 
+#     SET b_quant_integer = 10
+#     WHERE bread_name = '{b_name[i]}';
+#     ''')
 
 # c.execute("update user_baked_goods set patry_name = 'Devils delight' where pastry='C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry7.jpg' ")
 # c.execute(f'''
