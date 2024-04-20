@@ -5,7 +5,9 @@ import sqlite3
 import bcrypt
 from tkinter import messagebox
 from tkinter import ttk
+from tkinter import filedialog
 import math
+
 
 
 global next
@@ -23,60 +25,51 @@ def validate(username,passkey):
 
     return flag
 
-def get_info(user):
+def get_info(user,dec):
     conn = sqlite3.connect('C:/Users/33333333333333333333/gitdemo/BakeBook/bakebase.db')
     c = conn.cursor()
-    c.execute("SELECT * from user_baked_goods WHERE username = ?;",(user,))
+    if dec =='c':
+        c.execute('''
+        SELECT * FROM cakes WHERE user = ?
+        ''',(user,))
+    elif dec =='p':
+        c.execute('''
+        SELECT * FROM pastries WHERE user = ?
+        ''',(user,))
+    elif dec  == 'b':
+        c.execute('''
+        SELECT * FROM breads WHERE user = ?
+        ''',(user,))
+
     info = c.fetchall()
     conn.commit()
     conn.close()
     return info
 
-def get_cakes(list):
-    img_list = []
-    for images in list:
-        img_list.append(images[2])
-    return img_list
+def get_name(lst):
+    name_ls = []
+    for entries in lst:
+        name_ls.append(entries[1])
+    return name_ls
 
-def get_names(list,n):
-    name_list = []
-    for names in list:
-        name_list.append(names[n])
-    return name_list
-
-def get_pastries(list):
-    img_list = []
-    for images in list:
-        img_list.append(images[4])
-    return img_list
-
-def get_bread(list):
-    img_list = []
-    for images in list:
-        img_list.append(images[6])
-    return img_list
-
-def get_inv(list,n):
-    new_ls = []
-    for names in list:
-        new_ls.append(names[n])
-    return new_ls
+def get_img(lst):
+    img_ls = []
+    for entries in lst:
+        img_ls.append(entries[2])
+    return img_ls
 
 def cake(user,master):
     cake_fm = ctk.CTkFrame(master)
     scroll_cake = ctk.CTkScrollableFrame(cake_fm,fg_color='white')
     scroll_cake.pack(fill='both',expand=True)
-    info = get_info(user)
-    img_list = get_cakes(info)
-    name_ls = get_names(info, 3)
-    name_ls.reverse()
-    print(name_ls)
-    # print(img_list[1])
-    size = len(img_list)
-    # print(size)
+    info = get_info(user,'c')
+    img_ls = get_img(info)
+    name_ls = get_name(info)
+    size = len(info)
     frame_no = math.ceil(size/3)
-    # print(each_frame)
-    count = len(img_list)
+    print(frame_no)
+    count = len(info)    
+    
     k = 0
     for i in range (0,frame_no):
         frame = ctk.CTkFrame(scroll_cake)
@@ -87,12 +80,12 @@ def cake(user,master):
         down.pack(side='bottom',fill = 'both',expand=True)
 
         for j in range(3):
-            img = ctk.CTkImage(light_image=Image.open(img_list[count-1-k]),size=(100,100))
+            img = ctk.CTkImage(light_image=Image.open(img_ls[k]),size=(100,100))
             ctk.CTkLabel(up,text='',image=img).pack(side='left',pady = 10,padx =40)
             ctk.CTkLabel(down,text=name_ls[k]).pack(side='left',pady = 10,padx = 30)
             ctk.CTkButton(down,text='Add',width=30,fg_color='#8E44AD').pack(side='left')
             k+=1
-            if k>=count:
+            if k>=size:
                 break
 
         
@@ -102,17 +95,11 @@ def pastry(user,master):
     pastry_fm = ctk.CTkFrame(master,fg_color='#D2B4DE')
     scroll_pastry = ctk.CTkScrollableFrame(pastry_fm,fg_color='white')
     scroll_pastry.pack(fill='both',expand=True)
-    info = get_info(user)
-    img_list = get_pastries(info)
-    name_ls = get_names(info, 5)
-    name_ls.reverse()
-    print(name_ls)
-    print(img_list[0])
-    size = len(img_list)
-    # print(size)
+    info = get_info(user,'p')
+    img_ls = get_img(info)
+    name_ls = get_name(info)
+    size = len(info)
     frame_no = math.ceil(size/3)
-    # print(each_frame)
-    count = len(img_list)
     k = 0
     for i in range (0,frame_no):
         frame = ctk.CTkFrame(scroll_pastry)
@@ -123,12 +110,12 @@ def pastry(user,master):
         down.pack(side='bottom',fill = 'both',expand=True)
 
         for j in range(3):
-            img = ctk.CTkImage(light_image=Image.open(img_list[count-1-k]),size=(100,100))
+            img = ctk.CTkImage(light_image=Image.open(img_ls[k]),size=(100,100))
             ctk.CTkLabel(up,text='',image=img).pack(side='left',pady = 10,padx =40)
             ctk.CTkLabel(down,text=name_ls[k]).pack(side='left',pady = 10,padx = 30)
             ctk.CTkButton(down,text='Add',width=30,fg_color='#8E44AD').pack(side='left')
             k+=1
-            if k>=count:
+            if k>=size:
                 break
 
     return pastry_fm
@@ -137,17 +124,11 @@ def bread(user,master):
     bread_fm = ctk.CTkFrame(master,fg_color='blue')
     scroll_bread = ctk.CTkScrollableFrame(bread_fm,fg_color='white')
     scroll_bread.pack(fill='both',expand=True)
-    info = get_info(user)
-    img_list = get_bread(info)
-    name_ls = get_names(info, 7)
-    name_ls.reverse()
-    print(name_ls)
-    print(img_list[0])
-    size = len(img_list)
-    # print(size)
+    info = get_info(user,'b')
+    img_ls = get_img(info)
+    name_ls = get_name(info)
+    size = len(img_ls)
     frame_no = math.ceil(size/3)
-    # print(each_frame)
-    count = len(img_list)
     k = 0
     for i in range (0,frame_no):
         frame = ctk.CTkFrame(scroll_bread)
@@ -158,12 +139,12 @@ def bread(user,master):
         down.pack(side='bottom',fill = 'both',expand=True)
 
         for j in range(3):
-            img = ctk.CTkImage(light_image=Image.open(img_list[count-1-k]),size=(100,100))
+            img = ctk.CTkImage(light_image=Image.open(img_ls[k]),size=(100,100))
             ctk.CTkLabel(up,text='',image=img).pack(side='left',pady = 10,padx =40)
             ctk.CTkLabel(down,text=name_ls[k]).pack(side='left',pady = 10,padx = 30)
             ctk.CTkButton(down,text='Add',width=30,fg_color='#8E44AD').pack(side='left')
             k+=1
-            if k>=count:
+            if k>=size:
                 break
     return bread_fm
 
@@ -173,23 +154,20 @@ def disp_contents(window,product):
     c = conn.cursor()
     info = None
     if product == 'c':
-        product_name = 'Cakes'
-        c.execute('''SELECT cake_name,c_qaunt FROM user_baked_goods''')
+        c.execute('''SELECT cake_name,c_quant FROM cakes''')
         info = c.fetchall()
         conn.commit()
     elif product == 'p':
-        product_name = 'Pastries'
-        c.execute('''SELECT patry_name,p_quant FROM user_baked_goods''')
+        c.execute('''SELECT pastry_name,p_quant FROM pastries''')
         info = c.fetchall()
         conn.commit()
     elif product == 'b':
-        product_name = 'Breads and Toast'
-        c.execute('''SELECT bread_name,b_quant_integer FROM user_baked_goods''')
+        c.execute('''SELECT bread_name,b_quant FROM breads''')
         info = c.fetchall()
         conn.commit()
     conn.close()
     table = ttk.Treeview(window,columns=('prod_name','Quantity'),show='headings')
-    table.heading('prod_name',text = product_name)
+    table.heading('prod_name',text = 'Product')
     table.heading('Quantity',text = 'Quantity')
     for i in range(len(info)):
         data = info[i]
@@ -221,29 +199,31 @@ def add_items(window,user,name,quant,dec):
         conn = sqlite3.connect('C:/Users/33333333333333333333/gitdemo/BakeBook/bakebase.db')
         c = conn.cursor()
         if dec == 'c':
-            c.execute('SELECT c_qaunt from user_baked_goods WHERE username = ? AND cake_name = ?',(user,name))
+            c.execute('SELECT c_quant FROM cakes WHERE user = ? AND cake_name = ?',(user,name))
             q = c.fetchone()[0]
             print(q)
             c.execute('''
-            UPDATE user_baked_goods
-             SET c_qaunt = ?
-            WHERE username = ? AND cake_name = ?;
+            UPDATE cakes
+             SET c_quant = ?
+            WHERE user = ? AND cake_name = ?;
             ''',(q+units,user,name))
+
         elif dec == 'p':
-            c.execute('SELECT p_quant from user_baked_goods WHERE username = ? AND patry_name = ?',(user,name))
+            c.execute('SELECT p_quant from pastries WHERE user = ? AND pastry_name = ?',(user,name))
             q = c.fetchone()[0]
             c.execute('''
-            UPDATE user_baked_goods
+            UPDATE pastries
             SET p_quant = ?
-            WHERE username = ? AND patry_name = ?;
+            WHERE user = ? AND pastry_name = ?;
             ''',(q+units,user,name))
+
         elif dec == 'b':
-            c.execute('SELECT b_quant_integer from user_baked_goods WHERE username = ? AND bread_name = ?',(user,name))
+            c.execute('SELECT b_quant FROM breads WHERE user = ? AND bread_name = ?',(user,name))
             q = c.fetchone()[0]
             c.execute('''
-            UPDATE user_baked_goods
-            SET b_quant_integer = ?
-            WHERE username = ? AND bread_name = ?;
+            UPDATE breads
+            SET b_quant = ?
+            WHERE user = ? AND bread_name = ?;
             ''',(q+units,user,name))
         conn.commit()
         conn.close()
@@ -254,13 +234,13 @@ def update_inv(user):
     main = ctk.CTkFrame(new_win,fg_color='#D2B4DE')
     new_win.geometry('500x400')
     new_win.title('Update Inventory')
-    info = get_info(user)
-    cake = get_names(info, 3)
-    cake_quant = get_quant(info, 8)
-    pastry = get_names(info, 5)
-    pastry_quant = get_quant(info, 9)
-    bread = get_names(info, 7)
-    bread_quant = get_quant(info, 10)
+    c_info = get_info(user,'c')
+    c_name = get_name(c_info)
+    p_info = get_info(user,'p')
+    p_name = get_name(p_info)
+    b_info = get_info(user,'b')
+    b_name = get_name(b_info)
+
     Tab = ctk.CTkTabview(main,fg_color='#8E44AD',
     segmented_button_fg_color='#8E44AD',
     segmented_button_selected_color='#D2B4DE',
@@ -272,21 +252,21 @@ def update_inv(user):
     pastry_tab = Tab.add('Pastry')
     bread_tab = Tab.add('Breads')
 
-    cake_box = ctk.CTkComboBox(cake_tab,values = cake)
+    cake_box = ctk.CTkComboBox(cake_tab,values = c_name)
     cake_box.place(relx = 0.3, rely = 0.3, anchor = ctk.CENTER)
     cake_units = ctk.CTkEntry(cake_tab, placeholder_text = 'Units',width = 50)
     cake_units.place(relx = 0.7,rely = 0.3, anchor = ctk.CENTER)
     add_c = ctk.CTkButton(cake_tab,text='Add',hover_color = '#D2B4DE',fg_color='#A569BD',command = lambda:add_items(new_win,user,cake_box.get(),cake_units.get(),'c'))
     add_c.place(relx = 0.5,rely = 0.5, anchor = ctk.CENTER) 
  
-    pastry_box = ctk.CTkComboBox(pastry_tab,values = pastry)
+    pastry_box = ctk.CTkComboBox(pastry_tab,values = p_name)
     pastry_box.place(relx = 0.3, rely = 0.3, anchor = ctk.CENTER)
     pastry_units = ctk.CTkEntry(pastry_tab, placeholder_text = 'Units',width = 50)
     pastry_units.place(relx = 0.7,rely = 0.3, anchor = ctk.CENTER)
     add_p = ctk.CTkButton(pastry_tab,text='Add',hover_color = '#D2B4DE',fg_color='#A569BD',command = lambda:add_items(new_win,user,pastry_box.get(),pastry_units.get(),'p'))
     add_p.place(relx = 0.5,rely = 0.5, anchor = ctk.CENTER) 
 
-    bread_box = ctk.CTkComboBox(bread_tab,values = bread)
+    bread_box = ctk.CTkComboBox(bread_tab,values = b_name)
     bread_box.place(relx = 0.3, rely = 0.3, anchor = ctk.CENTER)
     bread_units = ctk.CTkEntry(bread_tab, placeholder_text = 'Units',width = 50)
     bread_units.place(relx = 0.7,rely = 0.3, anchor = ctk.CENTER)
@@ -302,6 +282,12 @@ def refresh(user,master,s1,s2,big_m):
     s2.destroy()
     inv(user,big_m)
 
+img_path = None
+def save_img(master):
+    img_path = filedialog.askopenfilename()
+    ctk.CTkLabel(master,text = 'Image added succesfully').place(relx = 0.7, rely = 0.8 ,anchor =ctk.CENTER)
+
+
 def add_new_item(user):
     new_win = ctk.CTk()
     new_win.geometry('500x400')
@@ -316,12 +302,17 @@ def add_new_item(user):
     item_category_lb.place(relx = 0.3, rely = 0.4,anchor = ctk.CENTER)
     radio_var = ctk.StringVar(value = 'other')
     c = ctk.CTkRadioButton(main_fm,text = 'Cake',value = 'c',variable = radio_var)
-    c.place(relx = 0.7, rely = 0.5, anchor = ctk.CENTER)
+    c.place(relx = 0.7, rely = 0.4, anchor = ctk.CENTER)
     p = ctk.CTkRadioButton(main_fm,text = 'Pastry',value = 'p',variable = radio_var)
-    p.place(relx = 0.7, rely = 0.6, anchor = ctk.CENTER)
+    p.place(relx = 0.7, rely = 0.5, anchor = ctk.CENTER)
     b = ctk.CTkRadioButton(main_fm,text = 'Breads',value = 'b',variable = radio_var)
-    b.place(relx = 0.7, rely = 0.7, anchor = ctk.CENTER)
-    
+    b.place(relx = 0.7, rely = 0.6, anchor = ctk.CENTER)
+    img_lb = ctk.CTkLabel(main_fm,text = 'Image of the item : ')
+    img_lb.place(relx = 0.3, rely = 0.7, anchor =ctk.CENTER)
+    img_btn = ctk.CTkButton(main_fm, text = 'Select',fg_color = '#A569BD',hover_color='#8E44AD',command = lambda: save_img(main_fm))
+    img_btn.place(relx = 0.7, rely = 0.7 ,anchor =ctk.CENTER)
+    add = ctk.CTkButton(main_fm,text = 'Add',fg_color = '#A569BD',hover_color='#8E44AD',command = lambda:add_new(user,item_name.get(),img_path,radio_var.get()))
+    add.place(relx = 0.5,rely = 0.8, anchor = ctk.CENTER)
     new_win.mainloop()
 
 
@@ -336,6 +327,7 @@ def scroll_cont(user,master,s1,s2,big_m):
     disp_contents(scroll,'p')
     ctk.CTkLabel(scroll,text='Breads and Toast',font=('Garamond Bold',25),text_color='#D2B4DE').pack(side='top',padx = 10, pady = 10)
     disp_contents(scroll,'b')
+
 
 def inv(user,master):
     inv_fm = ctk.CTkFrame(master,fg_color='#D2B4DE')

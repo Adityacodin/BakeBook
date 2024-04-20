@@ -134,45 +134,16 @@ c = conn.cursor()
 # ''')
 
 
-c.execute('''
-SELECT * FROM users;
-''')
-print(c.fetchall())
-c.execute('SELECT cake_name FROM user_baked_goods;')
-print(c.fetchall())
-# cakes = ['C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake1.jpg',
-# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake2.jpg',
-# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake3.jpg',
-# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake4.jpg',
-# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake5.jpg',
-# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake6.jpg',
-# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake7.jpg',
-# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake8.jpg',
-# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake9.jpg',
-# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake10.jpg',
-# ]
-# pastries = ['C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry1.jpg',
-# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry2.jpg',
-# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry3.jpg',
-# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry4.jpg',
-# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry5.jpg',
-# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry6.jpg',
-# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry7.jpg',
-# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry8.jpg',
-# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry9.jpg',
-# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry10.jpg',
-# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry11.jpg',
-# ]
-# breads = ['C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b1.jpg',
-# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b2.jpg',
-# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b3.jpg',
-# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b4.jpg',
-# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b5.jpg',
-# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b6.jpg',
-# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b7.jpg',]
+# c.execute('''
+# SELECT * FROM users;
+# ''')
+# print(c.fetchall())
+# c.execute('SELECT cake_name FROM user_baked_goods;')
+# print(c.fetchall())
+# 
+# 
+# 
 # c_name = ['Black Forest','Red Velvet','Chocolate Cake','Truffle Drizzle','Vanilla Drip','Birthday Treat','Chococlate Cheesecake','Purple Haze','Wedding Cake','Chip Saga']
-# p_name= ['Pinapple Peace','Red Star','White Sea','Hazel Bite','Forest White','Trufflesome','Devils delight','Velvet Bliss','Almond & Hazel','Pink rizz','Sweet Three']
-# b_name = ['Brown cookies','Chocolate cookies','Loaf of Bread','Long Bread','Milk Rusk','Butter Rusk','Whole Grain bread']
 
 # # c.execute('ALTER TABLE user_baked_goods MODIFY c_quant INTEGER;')
 # for i in range (7):
@@ -191,5 +162,73 @@ print(c.fetchall())
 #     SET c_quant = 10
 #     WHERE cake_name = {c_name[0]};
 #     ''')
-conn.commit()
+
+# c.execute('''CREATE TABLE cakes(
+#     user TEXT REFERENCES users(username),
+#     cake_name TEXT,
+#     cake_img TEXT,
+#     c_quant INTEGER
+# );''')
+
+# c.execute('''CREATE TABLE pastries(
+#     user TEXT REFERENCES users(username),
+#     pastry_name TEXT,
+#     pastry_img TEXT,
+#     p_quant  INTEGER
+# );''')
+
+# c.execute('''CREATE TABLE breads(
+#     user TEXT REFERENCES users(username),
+#     bread_name TEXT,
+#     bread_img TEXT,
+#     b_quant INTEGER
+# );''')
+
+cakes = ['C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake1.jpg',
+'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake2.jpg',
+'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake3.jpg',
+'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake4.jpg',
+'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake5.jpg',
+'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake6.jpg',
+'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake7.jpg',
+'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake8.jpg',
+'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake9.jpg',
+'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake10.jpg',
+]
+
+pastries = ['C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry1.jpg',
+'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry2.jpg',
+'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry3.jpg',
+'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry4.jpg',
+'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry5.jpg',
+'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry6.jpg',
+'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry7.jpg',
+'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry8.jpg',
+'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry9.jpg',
+'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry10.jpg',
+'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry11.jpg',
+]
+
+breads = ['C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b1.jpg',
+'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b2.jpg',
+'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b3.jpg',
+'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b4.jpg',
+'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b5.jpg',
+'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b6.jpg',
+'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b7.jpg',]
+
+b_name = ['Brown cookies','Chocolate cookies','Loaf of Bread','Long Bread','Milk Rusk','Butter Rusk','Whole Grain bread']
+
+
+p_name= ['Pinapple Peace','Red Star','White Sea','Hazel Bite','Forest White','Trufflesome','Devils delight','Velvet Bliss','Almond & Hazel','Pink rizz','Sweet Three']
+
+i =0
+c_name = ['Black Forest','Red Velvet','Chocolate Cake','Truffle Drizzle','Vanilla Drip','Birthday Treat','Chococlate Cheesecake','Purple Haze','Wedding Cake','Chip Saga']
+for bread in breads:
+    c.execute("INSERT INTO breads VALUES ('aditya',?,?,0)",(b_name[i],bread))
+    i+=1
+    conn.commit()
+
+
+# conn.commit()
 conn.close()
