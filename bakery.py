@@ -282,10 +282,26 @@ def refresh(user,master,s1,s2,big_m):
     s2.destroy()
     inv(user,big_m)
 
-img_path = None
-def save_img(master):
+def save_img(user,master,item_name,radio_var):
     img_path = filedialog.askopenfilename()
     ctk.CTkLabel(master,text = 'Image added succesfully').place(relx = 0.7, rely = 0.8 ,anchor =ctk.CENTER)
+    add = ctk.CTkButton(master,text = 'Add',fg_color = '#A569BD',hover_color='#8E44AD',command = lambda:Add(user,item_name,img_path,radio_var))
+    add.place(relx = 0.5,rely = 0.9, anchor = ctk.CENTER)
+
+
+def Add(user,item,img,dec):
+    conn = sqlite3.connect('C:/Users/33333333333333333333/gitdemo/BakeBook/bakebase.db')
+    c = conn.cursor()
+
+    if dec == 'c':
+        c.execute('INSERT INTO cakes VALUES (?,?,?,0)',(user,item,img))
+    elif dec == 'p':
+        c.execute('INSERT INTO pastries VALUES (?,?,?,0)',(user,item,img))
+    elif dec == 'b':
+        c.execute('INSERT INTO breads VALUES (?,?,?,0)',(user,item,img))
+
+    conn.commit()
+    conn.close()
 
 
 def add_new_item(user):
@@ -309,10 +325,9 @@ def add_new_item(user):
     b.place(relx = 0.7, rely = 0.6, anchor = ctk.CENTER)
     img_lb = ctk.CTkLabel(main_fm,text = 'Image of the item : ')
     img_lb.place(relx = 0.3, rely = 0.7, anchor =ctk.CENTER)
-    img_btn = ctk.CTkButton(main_fm, text = 'Select',fg_color = '#A569BD',hover_color='#8E44AD',command = lambda: save_img(main_fm))
+    img_btn = ctk.CTkButton(main_fm, text = 'Select',fg_color = '#A569BD',hover_color='#8E44AD',command = lambda: save_img(user,main_fm,item_name.get(),radio_var.get()))
     img_btn.place(relx = 0.7, rely = 0.7 ,anchor =ctk.CENTER)
-    add = ctk.CTkButton(main_fm,text = 'Add',fg_color = '#A569BD',hover_color='#8E44AD',command = lambda:add_new(user,item_name.get(),img_path,radio_var.get()))
-    add.place(relx = 0.5,rely = 0.8, anchor = ctk.CENTER)
+    
     new_win.mainloop()
 
 
