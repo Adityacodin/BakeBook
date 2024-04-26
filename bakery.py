@@ -11,6 +11,7 @@ import math
 
 
 global next
+global cart
 def validate(username,passkey):
     flag = False
     conn = sqlite3.connect('C:/Users/33333333333333333333/gitdemo/BakeBook/bakebase.db')
@@ -58,6 +59,23 @@ def get_img(lst):
         img_ls.append(entries[2])
     return img_ls
 
+def getInfo(product_name,dec):
+    info = None
+    conn = sqlite3.connect('C:/Users/33333333333333333333/gitdemo/BakeBook/bakebase.db')        
+    c = conn.cursor()
+    if dec == 'c':
+        c.execute('SELECT cake_name,c_quant,price FROM cakes WHERE cake_name = ?',(product_name,))
+        info = c.fetchone()
+    elif dec == 'p':
+        c.execute('SELECT pastry_name,p_quant,price FROM pastries WHERE pastry_name = ?',(product_name,))
+        info = c.fetchone()
+    elif dec == 'b':
+        c.execute('SELECT bread_name,b_quant,price FROM breads WHERE bread_name = ?',(product_name,))
+        info = c.fetchone()
+    print(info)
+    conn.commit()
+    conn.close()
+
 def cake(user,master):
     cake_fm = ctk.CTkFrame(master)
     scroll_cake = ctk.CTkScrollableFrame(cake_fm,fg_color='white')
@@ -71,6 +89,7 @@ def cake(user,master):
     count = len(info)    
     
     k = 0
+    c_buttons = []
     for i in range (0,frame_no):
         frame = ctk.CTkFrame(scroll_cake)
         frame.pack(fill='both',expand=True)
@@ -78,17 +97,16 @@ def cake(user,master):
         up.pack(side='top',fill = 'both',expand=True)
         down = ctk.CTkFrame(frame,fg_color='#AF7AC5')
         down.pack(side='bottom',fill = 'both',expand=True)
-
         for j in range(3):
+            product_name = name_ls[k]
             img = ctk.CTkImage(light_image=Image.open(img_ls[k]),size=(100,100))
             ctk.CTkLabel(up,text='',image=img).pack(side='left',pady = 10,padx =40)
-            ctk.CTkLabel(down,text=name_ls[k]).pack(side='left',pady = 10,padx = 30)
-            ctk.CTkButton(down,text='Add',width=30,fg_color='#8E44AD').pack(side='left')
+            ctk.CTkLabel(down,text=product_name).pack(side='left',pady = 10,padx = 30)
+            c_buttons.append(ctk.CTkButton(down,text='Add',width=30,fg_color='#8E44AD',command = lambda name = product_name: getInfo(name,'c')))
+            c_buttons[k].pack(side='left')
             k+=1
             if k>=size:
                 break
-
-        
     return cake_fm    
 
 def pastry(user,master):
@@ -101,6 +119,7 @@ def pastry(user,master):
     size = len(info)
     frame_no = math.ceil(size/3)
     k = 0
+    p_buttons = []
     for i in range (0,frame_no):
         frame = ctk.CTkFrame(scroll_pastry)
         frame.pack(fill='both',expand=True)
@@ -110,41 +129,46 @@ def pastry(user,master):
         down.pack(side='bottom',fill = 'both',expand=True)
 
         for j in range(3):
+            product_name = name_ls[k]
             img = ctk.CTkImage(light_image=Image.open(img_ls[k]),size=(100,100))
             ctk.CTkLabel(up,text='',image=img).pack(side='left',pady = 10,padx =40)
-            ctk.CTkLabel(down,text=name_ls[k]).pack(side='left',pady = 10,padx = 30)
-            ctk.CTkButton(down,text='Add',width=30,fg_color='#8E44AD').pack(side='left')
+            ctk.CTkLabel(down,text=product_name).pack(side='left',pady = 10,padx = 30)
+            p_buttons.append(ctk.CTkButton(down,text='Add',width=30,fg_color='#8E44AD',command=lambda name=product_name: getInfo(name,'p')))
+            p_buttons[k].pack(side='left')
             k+=1
             if k>=size:
                 break
 
     return pastry_fm
 
-def bread(user,master):
-    bread_fm = ctk.CTkFrame(master,fg_color='blue')
-    scroll_bread = ctk.CTkScrollableFrame(bread_fm,fg_color='white')
-    scroll_bread.pack(fill='both',expand=True)
-    info = get_info(user,'b')
+
+def bread(user, master):
+    bread_fm = ctk.CTkFrame(master, fg_color='blue')
+    scroll_bread = ctk.CTkScrollableFrame(bread_fm, fg_color='white')
+    scroll_bread.pack(fill='both', expand=True)
+    info = get_info(user, 'b')
     img_ls = get_img(info)
     name_ls = get_name(info)
     size = len(img_ls)
-    frame_no = math.ceil(size/3)
+    frame_no = math.ceil(size / 3)
     k = 0
-    for i in range (0,frame_no):
+    b_buttons = []
+    for i in range(0, frame_no):
         frame = ctk.CTkFrame(scroll_bread)
-        frame.pack(fill='both',expand=True)
-        up = ctk.CTkFrame(frame,fg_color ='#8E44AD')
-        up.pack(side='top',fill = 'both',expand=True)
-        down = ctk.CTkFrame(frame,fg_color='#AF7AC5')
-        down.pack(side='bottom',fill = 'both',expand=True)
-
+        frame.pack(fill='both', expand=True)
+        up = ctk.CTkFrame(frame, fg_color='#8E44AD')
+        up.pack(side='top', fill='both', expand=True)
+        down = ctk.CTkFrame(frame, fg_color='#AF7AC5')
+        down.pack(side='bottom', fill='both', expand=True)
         for j in range(3):
-            img = ctk.CTkImage(light_image=Image.open(img_ls[k]),size=(100,100))
-            ctk.CTkLabel(up,text='',image=img).pack(side='left',pady = 10,padx =40)
-            ctk.CTkLabel(down,text=name_ls[k]).pack(side='left',pady = 10,padx = 30)
-            ctk.CTkButton(down,text='Add',width=30,fg_color='#8E44AD').pack(side='left')
-            k+=1
-            if k>=size:
+            product_name = name_ls[k]
+            img = ctk.CTkImage(light_image=Image.open(img_ls[k]), size=(100, 100))
+            ctk.CTkLabel(up, text='', image=img).pack(side='left', pady=10, padx=40)
+            ctk.CTkLabel(down, text=product_name).pack(side='left', pady=10, padx=30)
+            b_buttons.append(ctk.CTkButton(down, text='Add', width=30, fg_color='#8E44AD', command=lambda name=product_name: getInfo(name,'b')))
+            b_buttons[k].pack(side='left')
+            k += 1
+            if k >= size:
                 break
     return bread_fm
 
