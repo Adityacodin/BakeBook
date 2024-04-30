@@ -184,53 +184,53 @@ c = conn.cursor()
 #     b_quant INTEGER
 # );''')
 
-cakes = ['C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake1.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake2.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake3.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake4.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake5.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake6.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake7.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake8.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake9.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake10.jpg',
-]
+# cakes = ['C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake1.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake2.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake3.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake4.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake5.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake6.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake7.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake8.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake9.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/cake10.jpg',
+# ]
 
-pastries = ['C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry1.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry2.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry3.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry4.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry5.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry6.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry7.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry8.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry9.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry10.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry11.jpg',
-]
+# pastries = ['C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry1.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry2.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry3.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry4.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry5.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry6.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry7.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry8.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry9.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry10.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/pastry11.jpg',
+# ]
 
-breads = ['C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b1.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b2.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b3.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b4.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b5.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b6.jpg',
-'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b7.jpg',]
+# breads = ['C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b1.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b2.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b3.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b4.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b5.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b6.jpg',
+# 'C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/b7.jpg',]
 
-b_name = ['Brown cookies','Chocolate cookies','Loaf of Bread','Long Bread','Milk Rusk','Butter Rusk','Whole Grain bread']
+# b_name = ['Brown cookies','Chocolate cookies','Loaf of Bread','Long Bread','Milk Rusk','Butter Rusk','Whole Grain bread']
 
 
-p_name= ['Pinapple Peace','Red Star','White Sea','Hazel Bite','Forest White','Trufflesome','Devils delight','Velvet Bliss','Almond & Hazel','Pink rizz','Sweet Three']
+# p_name= ['Pinapple Peace','Red Star','White Sea','Hazel Bite','Forest White','Trufflesome','Devils delight','Velvet Bliss','Almond & Hazel','Pink rizz','Sweet Three']
 
-i =0
-c_name = ['Black Forest','Red Velvet','Chocolate Cake','Truffle Drizzle','Vanilla Drip','Birthday Treat','Chococlate Cheesecake','Purple Haze','Wedding Cake','Chip Saga']
-c_price = [500,650,400,780,370,560,400,680,700,900]
-p_price = [50,80,50,70,80,50,40,60,40,80,70]
-b_price = [250,300,40,50,30,40,50]
-for bread in breads:
-    c.execute("INSERT INTO breads VALUES ('aditya',?,?,0,?)",(b_name[i],bread,b_price[i]))
-    i+=1
-    conn.commit()
+# i =0
+# c_name = ['Black Forest','Red Velvet','Chocolate Cake','Truffle Drizzle','Vanilla Drip','Birthday Treat','Chococlate Cheesecake','Purple Haze','Wedding Cake','Chip Saga']
+# c_price = [500,650,400,780,370,560,400,680,700,900]
+# p_price = [50,80,50,70,80,50,40,60,40,80,70]
+# b_price = [250,300,40,50,30,40,50]
+# for bread in breads:
+#     c.execute("INSERT INTO breads VALUES ('aditya',?,?,0,?)",(b_name[i],bread,b_price[i]))
+#     i+=1
+#     conn.commit()
 
 # c.execute("UPDATE cakes SET cake_img= ? WHERE user = 'aditya' AND cake_name = 'Brown Bad'",('C:/Users/33333333333333333333/gitdemo/BakeBook/usercakes/c.jpg'))
 
@@ -267,4 +267,5 @@ for bread in breads:
 # );''')
 
 # conn.commit()
+c.execute('CREATE TABLE orders(order INTEGER PRIMARY KEY,date TEXT, time TEXT)')
 conn.close()

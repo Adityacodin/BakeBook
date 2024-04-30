@@ -7,10 +7,11 @@ from tkinter import messagebox
 from tkinter import ttk
 from tkinter import filedialog
 import math
+import uuid
+import datetime
 
 
 
-global next
 def validate(username,passkey):
     flag = False
     conn = sqlite3.connect('C:/Users/33333333333333333333/gitdemo/BakeBook/bakebase.db')
@@ -95,13 +96,23 @@ def getInfo(product_name,dec):
     Cart(info[0],info[2])
     conn.close()
 
-def Cart(name,price):
-    cart.append((name,price))
+cartF = False
+cart = []
+
+def Cart(name, price):
+    global cartF
+    global cart
+    if cartF:
+        cart.append((name, price))
+    else:
+        messagebox.showinfo('Warning', 'Cart not initialized, kindly visit the inventory to initialize')
 
 def newCart():
     global cart
+    global cartF
     cart = []
-    return
+    cartF = True
+
 
 customer_info = None
 def send_userinfo(master,name,phone):
@@ -116,25 +127,40 @@ def send_userinfo(master,name,phone):
         master.destroy()
     else :
         customer_info = (name,phone)
+        # close_btn = ctk.CTkLabel(master,text='This window can be closed now')
+        # close_btn.place(relx = 0.5, rely = 0.9, anchor = ctk.CENTER) 
+        close(master)
         generateBill(customer_info,master)
 
 def customer():
-    win = ctk.CTk()
-    win.geometry('200x200')
-    fm = ctk.CTkFrame(win,fg_color='#D2B4DE')
-    fm.pack(fill='both',expand = True)
-    name = ctk.CTkEntry(fm, placeholder_text = 'Customer name')
-    name.place(relx = 0.5, rely = 0.3,anchor = ctk.CENTER)
-    phone = ctk.CTkEntry(fm,placeholder_text = 'Phone No.')
-    phone.place(relx = 0.5, rely = 0.5, anchor = ctk.CENTER)
-    proceed_btn = ctk.CTkButton(fm,text='Proceed',fg_color = '#A569BD',hover_color='#8E44AD',command = lambda: send_userinfo(win,name.get(),phone.get()))
-    proceed_btn.place(relx = 0.5, rely = 0.7, anchor = ctk.CENTER)
-    close_btn = ctk.CTkButton(fm,text='Proceed',fg_color = '#A569BD',hover_color='#8E44AD',command = lambda: win.close())
-    close_btn.place(relx = 0.5, rely = 0.9, anchor = ctk.CENTER)
+    if cartF:
+        win = ctk.CTk()
+        win.geometry('200x200')
+        win.title('Customer information')
+        fm = ctk.CTkFrame(win,fg_color='#D2B4DE')
+        fm.pack(fill='both',expand = True)
+        name = ctk.CTkEntry(fm, placeholder_text = 'Customer name')
+        name.place(relx = 0.5, rely = 0.3,anchor = ctk.CENTER)
+        phone = ctk.CTkEntry(fm,placeholder_text = 'Phone No.')
+        phone.place(relx = 0.5, rely = 0.5, anchor = ctk.CENTER)
+        proceed_btn = ctk.CTkButton(fm,text='Proceed',fg_color = '#A569BD',hover_color='#8E44AD',command = lambda: send_userinfo(win,name.get(),phone.get()))
+        proceed_btn.place(relx = 0.5, rely = 0.7, anchor = ctk.CENTER)
+        win.mainloop()
+   
+    else:
+        messagebox.showinfo('Warning', 'Cart not initialized, kindly visit the inventory to initialize')
 
-    win.mainloop()
+def close(master):
+    master.destroy()
 
+def get_current_datetime(format="%Y-%m-%d %H:%M:%S"):
+    current_datetime = datetime.datetime.now()
+    formatted_datetime = current_datetime.strftime(format)
+    return formatted_datetime
 
+def generate_order_id(name, phone):
+    order_id = uuid.uuid4()
+    return str(order_id)[:8]
 
 def generateBill(customer_info,master):
     if len(cart) == 0:
@@ -154,15 +180,23 @@ def generateBill(customer_info,master):
                 quant.append(1)
         
         if customer_info != None:
-            print("Customer Name:", customer_info[0])
-            print("Phone Number:", customer_info[1])
-            print("\n===================================")
-            print("            YOUR BILL")
-            print("===================================")
-            print("Product        Quantity      Price")
-            print("------------------------------------")
+            uid = generate_order_id(customer_info[0], customer_info[1])
+            date_time = get_current_datetime()
+            date = date_time[:10]
+            time = date_time[11:]
+            file = open(f'{uid[:8]}.txt','w')
+            file.write(f"D: {date}   T: {time}")
+            file.write(f"\nOrder id: {uid}")
+            file.write(f"\nCustomer Name: {customer_info[0]}")
+            file.write(f"\nPhone Number: {customer_info[1]}")
+            file.write("\n===================================")
+            file.write("\n            YOUR BILL")
+            file.write("\n===================================")
+            file.write("\nProduct        Quantity      Price")
+            file.write("\n------------------------------------")
             for i in range(len(products)):
-                print(f"{products[i]:<15} {quant[i]:<10} ${price[i]:.2f}")
+                file.write(f"\n{products[i]:<15} {quant[i]:<10} Rs {price[i]:.2f}")
+            file.close()
             messagebox.showinfo('Success',"Receipt Successfully generated")
         else :
             messagebox.showerror('Error','Try again')
@@ -390,7 +424,7 @@ def update_inv(user):
     add_b = ctk.CTkButton(bread_tab,text='Add',hover_color = '#D2B4DE',fg_color='#A569BD',command = lambda:add_items(new_win,user,bread_box.get(),bread_units.get(),'b'))
     add_b.place(relx = 0.5,rely = 0.5, anchor = ctk.CENTER) 
 
-    ctk.CTkButton(main,text='Done',command = lambda: done(new_win),fg_color = '#A569BD',hover_color='#8E44AD').pack(side='bottom',pady = 10)
+    ctk.CTkButton(main,text='Done',command = lambda: close(new_win),fg_color = '#A569BD',hover_color='#8E44AD').pack(side='bottom',pady = 10)
     main.pack(fill='both',expand=True)
     new_win.mainloop()
 
@@ -472,7 +506,7 @@ def inv(user,master):
     update_button.place(relx = 0.2, rely = 0.5,anchor = ctk.CENTER)
     add_new = ctk.CTkButton(menu_fm,text='Add New Item',fg_color = '#A569BD',hover_color='#8E44AD',command = lambda: add_new_item(user),width = 50)
     add_new.place(relx = 0.4, rely = 0.5,anchor = ctk.CENTER)
-    new_cart = ctk.CTkButton(menu_fm,text='New Cart',fg_color = '#A569BD',hover_color='#8E44AD',command = newCart,width = 50)
+    new_cart = ctk.CTkButton(menu_fm,text='New Cart',fg_color = '#A569BD',hover_color='#8E44AD',command = lambda: newCart(),width = 50)
     new_cart.place(relx = 0.6, rely = 0.5,anchor = ctk.CENTER)
     gen_bill = ctk.CTkButton(menu_fm,text='Generate Bill',fg_color = '#A569BD',hover_color='#8E44AD',command = lambda: customer(), width = 50)
     gen_bill.place(relx = 0.8, rely = 0.5,anchor = ctk.CENTER)
@@ -512,7 +546,7 @@ def inside(user):
     display_frame = ctk.CTkFrame(menu_page,fg_color='#8E44AD')
     display_frame.pack(fill='both',expand=True)
 
-    new_cart = ctk.CTkButton(display_frame,text = 'New Cart',font=('Garamond Bold',13),fg_color='white',hover_color='light gray',text_color='#8E44AD',command = newCart)
+    new_cart = ctk.CTkButton(display_frame,text = 'New Cart',font=('Garamond Bold',13),fg_color='white',hover_color='light gray',text_color='#8E44AD',command = lambda: newCart())
     new_cart.place(relx = 0.5, rely = 0.5, anchor = ctk.CENTER)
 
     # menu options buttons
