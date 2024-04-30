@@ -11,7 +11,6 @@ import math
 
 
 global next
-global cart
 def validate(username,passkey):
     flag = False
     conn = sqlite3.connect('C:/Users/33333333333333333333/gitdemo/BakeBook/bakebase.db')
@@ -59,6 +58,12 @@ def get_img(lst):
         img_ls.append(entries[2])
     return img_ls
 
+def get_price(lst):
+    price_ls = []
+    for entries in lst:
+        price_ls.append(entries[4])
+    return price_ls
+
 def getInfo(product_name,dec):
     info = None
     conn = sqlite3.connect('C:/Users/33333333333333333333/gitdemo/BakeBook/bakebase.db')        
@@ -66,15 +71,101 @@ def getInfo(product_name,dec):
     if dec == 'c':
         c.execute('SELECT cake_name,c_quant,price FROM cakes WHERE cake_name = ?',(product_name,))
         info = c.fetchone()
+        if info[1] == 0:
+            messagebox.showerror("Error",'Product is out of stock')
+        else :
+            c.execute('UPDATE cakes SET c_quant = ?-1 WHERE cake_name = ?',(info[1],product_name))
+        conn.commit()
     elif dec == 'p':
         c.execute('SELECT pastry_name,p_quant,price FROM pastries WHERE pastry_name = ?',(product_name,))
         info = c.fetchone()
+        if info[1] == 0:
+            messagebox.showerror("Error",'Product is out of stock')
+        else :
+            c.execute('UPDATE pastries SET p_quant = ?-1 WHERE pastry_name = ?',(info[1],product_name))
+        conn.commit()
     elif dec == 'b':
         c.execute('SELECT bread_name,b_quant,price FROM breads WHERE bread_name = ?',(product_name,))
         info = c.fetchone()
-    print(info)
-    conn.commit()
+        if info[1] == 0:
+            messagebox.showerror("Error",'Product is out of stock')
+        else :
+            c.execute('UPDATE breads SET b_quant = ?-1 WHERE bread_name = ?',(info[1],product_name))
+        conn.commit()
+    Cart(info[0],info[2])
     conn.close()
+
+def Cart(name,price):
+    cart.append((name,price))
+
+def newCart():
+    global cart
+    cart = []
+    return
+
+customer_info = None
+def send_userinfo(master,name,phone):
+    if name == '':
+        messagebox.showerror('Error','Name field is empty')
+        master.destroy()
+    elif phone == '':
+        messagebox.showerror('Error','Phone field is empty')
+        master.destroy()
+    elif len(phone) > 10 or len(phone) < 10:
+        messagebox.showerror('','Number invalid')
+        master.destroy()
+    else :
+        customer_info = (name,phone)
+        generateBill(customer_info,master)
+
+def customer():
+    win = ctk.CTk()
+    win.geometry('200x200')
+    fm = ctk.CTkFrame(win,fg_color='#D2B4DE')
+    fm.pack(fill='both',expand = True)
+    name = ctk.CTkEntry(fm, placeholder_text = 'Customer name')
+    name.place(relx = 0.5, rely = 0.3,anchor = ctk.CENTER)
+    phone = ctk.CTkEntry(fm,placeholder_text = 'Phone No.')
+    phone.place(relx = 0.5, rely = 0.5, anchor = ctk.CENTER)
+    proceed_btn = ctk.CTkButton(fm,text='Proceed',fg_color = '#A569BD',hover_color='#8E44AD',command = lambda: send_userinfo(win,name.get(),phone.get()))
+    proceed_btn.place(relx = 0.5, rely = 0.7, anchor = ctk.CENTER)
+    close_btn = ctk.CTkButton(fm,text='Proceed',fg_color = '#A569BD',hover_color='#8E44AD',command = lambda: win.close())
+    close_btn.place(relx = 0.5, rely = 0.9, anchor = ctk.CENTER)
+
+    win.mainloop()
+
+
+
+def generateBill(customer_info,master):
+    if len(cart) == 0:
+        messagebox.showinfo('Warning',"Cart is Empty")
+    else:
+        products = []
+        price = []
+        quant = []
+        for item in cart:
+            if item[0] in products:
+                index = products.index(item[0])
+                price[index] += item[1]
+                quant[index] += 1
+            else :
+                products.append(item[0])
+                price.append(item[1])
+                quant.append(1)
+        
+        if customer_info != None:
+            print("Customer Name:", customer_info[0])
+            print("Phone Number:", customer_info[1])
+            print("\n===================================")
+            print("            YOUR BILL")
+            print("===================================")
+            print("Product        Quantity      Price")
+            print("------------------------------------")
+            for i in range(len(products)):
+                print(f"{products[i]:<15} {quant[i]:<10} ${price[i]:.2f}")
+            messagebox.showinfo('Success',"Receipt Successfully generated")
+        else :
+            messagebox.showerror('Error','Try again')
 
 def cake(user,master):
     cake_fm = ctk.CTkFrame(master)
@@ -83,11 +174,11 @@ def cake(user,master):
     info = get_info(user,'c')
     img_ls = get_img(info)
     name_ls = get_name(info)
+    price_ls = get_price(info)
     size = len(info)
     frame_no = math.ceil(size/3)
-    print(frame_no)
+    # print(frame_no)
     count = len(info)    
-    
     k = 0
     c_buttons = []
     for i in range (0,frame_no):
@@ -101,7 +192,7 @@ def cake(user,master):
             product_name = name_ls[k]
             img = ctk.CTkImage(light_image=Image.open(img_ls[k]),size=(100,100))
             ctk.CTkLabel(up,text='',image=img).pack(side='left',pady = 10,padx =40)
-            ctk.CTkLabel(down,text=product_name).pack(side='left',pady = 10,padx = 30)
+            ctk.CTkLabel(down,text=product_name+'  '+str(price_ls[k])+'Rs').pack(side='left',pady = 10,padx = 20)
             c_buttons.append(ctk.CTkButton(down,text='Add',width=30,fg_color='#8E44AD',command = lambda name = product_name: getInfo(name,'c')))
             c_buttons[k].pack(side='left')
             k+=1
@@ -116,6 +207,7 @@ def pastry(user,master):
     info = get_info(user,'p')
     img_ls = get_img(info)
     name_ls = get_name(info)
+    price_ls = get_price(info)
     size = len(info)
     frame_no = math.ceil(size/3)
     k = 0
@@ -132,7 +224,7 @@ def pastry(user,master):
             product_name = name_ls[k]
             img = ctk.CTkImage(light_image=Image.open(img_ls[k]),size=(100,100))
             ctk.CTkLabel(up,text='',image=img).pack(side='left',pady = 10,padx =40)
-            ctk.CTkLabel(down,text=product_name).pack(side='left',pady = 10,padx = 30)
+            ctk.CTkLabel(down,text=product_name+'  '+str(price_ls[k])+'Rs').pack(side='left',pady = 10,padx = 20)
             p_buttons.append(ctk.CTkButton(down,text='Add',width=30,fg_color='#8E44AD',command=lambda name=product_name: getInfo(name,'p')))
             p_buttons[k].pack(side='left')
             k+=1
@@ -149,6 +241,7 @@ def bread(user, master):
     info = get_info(user, 'b')
     img_ls = get_img(info)
     name_ls = get_name(info)
+    price_ls = get_price(info)
     size = len(img_ls)
     frame_no = math.ceil(size / 3)
     k = 0
@@ -164,8 +257,8 @@ def bread(user, master):
             product_name = name_ls[k]
             img = ctk.CTkImage(light_image=Image.open(img_ls[k]), size=(100, 100))
             ctk.CTkLabel(up, text='', image=img).pack(side='left', pady=10, padx=40)
-            ctk.CTkLabel(down, text=product_name).pack(side='left', pady=10, padx=30)
-            b_buttons.append(ctk.CTkButton(down, text='Add', width=30, fg_color='#8E44AD', command=lambda name=product_name: getInfo(name,'b')))
+            ctk.CTkLabel(down, text=product_name+'  '+str(price_ls[k])+'Rs').pack(side='left', pady=10, padx=20)
+            b_buttons.append(ctk.CTkButton(down, text='Add', width=30,fg_color = '#A569BD',hover_color='#8E44AD', command=lambda name=product_name: getInfo(name,'b')))
             b_buttons[k].pack(side='left')
             k += 1
             if k >= size:
@@ -306,23 +399,23 @@ def refresh(user,master,s1,s2,big_m):
     s2.destroy()
     inv(user,big_m)
 
-def save_img(user,master,item_name,radio_var):
+def save_img(user,master,item_name,price,radio_var):
     img_path = filedialog.askopenfilename()
     ctk.CTkLabel(master,text = 'Image added succesfully').place(relx = 0.7, rely = 0.8 ,anchor =ctk.CENTER)
-    add = ctk.CTkButton(master,text = 'Add',fg_color = '#A569BD',hover_color='#8E44AD',command = lambda:Add(user,item_name,img_path,radio_var))
+    add = ctk.CTkButton(master,text = 'Add',fg_color = '#A569BD',hover_color='#8E44AD',command = lambda:Add(user,item_name,img_path,price,radio_var))
     add.place(relx = 0.5,rely = 0.9, anchor = ctk.CENTER)
 
 
-def Add(user,item,img,dec):
+def Add(user,item,img,price,dec):
     conn = sqlite3.connect('C:/Users/33333333333333333333/gitdemo/BakeBook/bakebase.db')
     c = conn.cursor()
 
     if dec == 'c':
-        c.execute('INSERT INTO cakes VALUES (?,?,?,0)',(user,item,img))
+        c.execute('INSERT INTO cakes VALUES (?,?,?,0,?)',(user,item,img,price))
     elif dec == 'p':
-        c.execute('INSERT INTO pastries VALUES (?,?,?,0)',(user,item,img))
+        c.execute('INSERT INTO pastries VALUES (?,?,?,0,?)',(user,item,img,price))
     elif dec == 'b':
-        c.execute('INSERT INTO breads VALUES (?,?,?,0)',(user,item,img))
+        c.execute('INSERT INTO breads VALUES (?,?,?,0,?)',(user,item,img,price))
 
     conn.commit()
     conn.close()
@@ -347,10 +440,14 @@ def add_new_item(user):
     p.place(relx = 0.7, rely = 0.5, anchor = ctk.CENTER)
     b = ctk.CTkRadioButton(main_fm,text = 'Breads',value = 'b',variable = radio_var)
     b.place(relx = 0.7, rely = 0.6, anchor = ctk.CENTER)
+    price_lb = ctk.CTkLabel(main_fm,text = 'Price of the Item : ')
+    price_lb.place(relx = 0.3, rely = 0.7, anchor = ctk.CENTER)
+    price = ctk.CTkEntry(main_fm,placeholder_text='Price',width = 40)
+    price.place(relx = 0.7, rely = 0.7, anchor = ctk.CENTER)
     img_lb = ctk.CTkLabel(main_fm,text = 'Image of the item : ')
-    img_lb.place(relx = 0.3, rely = 0.7, anchor =ctk.CENTER)
-    img_btn = ctk.CTkButton(main_fm, text = 'Select',fg_color = '#A569BD',hover_color='#8E44AD',command = lambda: save_img(user,main_fm,item_name.get(),radio_var.get()))
-    img_btn.place(relx = 0.7, rely = 0.7 ,anchor =ctk.CENTER)
+    img_lb.place(relx = 0.3, rely = 0.8, anchor =ctk.CENTER)
+    img_btn = ctk.CTkButton(main_fm, text = 'Select',fg_color = '#A569BD',hover_color='#8E44AD',command = lambda: save_img(user,main_fm,item_name.get(),int(price.get()),radio_var.get()))
+    img_btn.place(relx = 0.7, rely = 0.8 ,anchor =ctk.CENTER)
     
     new_win.mainloop()
 
@@ -367,15 +464,19 @@ def scroll_cont(user,master,s1,s2,big_m):
     ctk.CTkLabel(scroll,text='Breads and Toast',font=('Garamond Bold',25),text_color='#D2B4DE').pack(side='top',padx = 10, pady = 10)
     disp_contents(scroll,'b')
 
-
 def inv(user,master):
     inv_fm = ctk.CTkFrame(master,fg_color='#D2B4DE')
     inv_fm.pack(side = 'bottom', fill='both',expand = True)
     menu_fm = ctk.CTkFrame(inv_fm,fg_color = '#D2B4DE')
-    update_button = ctk.CTkButton(menu_fm,text = 'Update Inventory',fg_color = '#A569BD',hover_color='#8E44AD',command = lambda : update_inv(user))
-    update_button.place(relx = 0.3, rely = 0.5,anchor = ctk.CENTER)
-    add_new = ctk.CTkButton(menu_fm,text='Add New Item',fg_color = '#A569BD',hover_color='#8E44AD',command = lambda: add_new_item(user))
-    add_new.place(relx = 0.7, rely = 0.5,anchor = ctk.CENTER)
+    update_button = ctk.CTkButton(menu_fm,text = 'Update Inventory',fg_color = '#A569BD',hover_color='#8E44AD',command = lambda : update_inv(user),width = 50)
+    update_button.place(relx = 0.2, rely = 0.5,anchor = ctk.CENTER)
+    add_new = ctk.CTkButton(menu_fm,text='Add New Item',fg_color = '#A569BD',hover_color='#8E44AD',command = lambda: add_new_item(user),width = 50)
+    add_new.place(relx = 0.4, rely = 0.5,anchor = ctk.CENTER)
+    new_cart = ctk.CTkButton(menu_fm,text='New Cart',fg_color = '#A569BD',hover_color='#8E44AD',command = newCart,width = 50)
+    new_cart.place(relx = 0.6, rely = 0.5,anchor = ctk.CENTER)
+    gen_bill = ctk.CTkButton(menu_fm,text='Generate Bill',fg_color = '#A569BD',hover_color='#8E44AD',command = lambda: customer(), width = 50)
+    gen_bill.place(relx = 0.8, rely = 0.5,anchor = ctk.CENTER)
+
 
     menu_fm.pack(side = 'bottom',pady=5)
     menu_fm.pack_propagate(False)
@@ -410,6 +511,9 @@ def inside(user):
 
     display_frame = ctk.CTkFrame(menu_page,fg_color='#8E44AD')
     display_frame.pack(fill='both',expand=True)
+
+    new_cart = ctk.CTkButton(display_frame,text = 'New Cart',font=('Garamond Bold',13),fg_color='white',hover_color='light gray',text_color='#8E44AD',command = newCart)
+    new_cart.place(relx = 0.5, rely = 0.5, anchor = ctk.CENTER)
 
     # menu options buttons
     cake_btn = ctk.CTkButton(options,text='Cakes',font=('Garamond Bold',13),fg_color='white',hover_color='white',text_color='#8E44AD',command = lambda: switch(cake(user,display_frame),display_frame))
@@ -481,13 +585,11 @@ def reg():
         
         
     ctk.CTkButton(frame,text = 'Complete',fg_color='#A569BD',hover_color='#8E44AD',command = lambda: AddUser(R,frame,u.get(),p.get(),cp.get())).place(relx = 0.65,rely = 0.8,anchor=ctk.CENTER)
-        
-
-    
     R.mainloop()
+
 okflag = False
 root = ctk.CTk()
-root.geometry('600x600')
+root.geometry('700x600')
 root.title("Bake-Book")
 
 Main = ctk.CTkFrame(root,fg_color='white')
